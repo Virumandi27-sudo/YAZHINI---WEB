@@ -756,7 +756,6 @@ button {
         </div>
     </section>
 
-
     <!-- ======================================================
          DESKTOP
     ======================================================= -->
@@ -819,7 +818,6 @@ button {
 
     </section>
 
-
     <!-- ======================================================
          BIRTHDAY
     ======================================================= -->
@@ -843,7 +841,6 @@ button {
         </div>
 
     </section>
-
 
     <!-- ======================================================
          ABOUT
@@ -877,7 +874,6 @@ SCAN COMPLETE.
         </div>
 
     </section>
-
 
     <!-- ======================================================
          NEXT DESTINATION
@@ -935,7 +931,6 @@ You've got this, senior. 🎓
 
     </section>
 
-
     <!-- ======================================================
          BIRTHDAY GAME
     ======================================================= -->
@@ -968,7 +963,6 @@ You've got this, senior. 🎓
 
     </section>
 
-
     <!-- ======================================================
          LITTLE THINGS
     ======================================================= -->
@@ -1000,7 +994,6 @@ You've got this, senior. 🎓
         </div>
 
     </section>
-
 
     <!-- ======================================================
          SECRET FILE PASSWORD
@@ -1039,7 +1032,6 @@ You've got this, senior. 🎓
 
     </div>
 
-
     <!-- ======================================================
          SECRET FILE
     ======================================================= -->
@@ -1070,7 +1062,6 @@ Happy Birthday, Yazhini. :)
         </div>
 
     </section>
-
 
     <!-- ======================================================
          FINAL MESSAGE
@@ -1110,7 +1101,6 @@ Take care, senior. 🎓
 
 </div>
 
-
 <!-- ============================================================
      MUSIC
 ============================================================ -->
@@ -1118,7 +1108,6 @@ Take care, senior. 🎓
 <audio id="backgroundMusic" loop preload="auto">
     <source src="The-Metro-Proposal-MassTamilan.dev.mp3.mpeg">
 </audio>
-
 
 <script>
 
@@ -1133,7 +1122,6 @@ const ACCENT = "#8B7CFF";
 const TEAL = "#45E0C4";
 const PINK = "#FF6FAE";
 const GREEN = "#61E294";
-
 
 /* ============================================================
    MUSIC
@@ -1153,7 +1141,6 @@ function startMusic() {
 window.addEventListener("click", startMusic, { once: true });
 window.addEventListener("touchstart", startMusic, { once: true });
 window.addEventListener("keydown", startMusic, { once: true });
-
 
 /* ============================================================
    SCREEN CONTROL
@@ -1183,7 +1170,6 @@ function showScreen(id) {
 function desktop() {
     showScreen("desktop");
 }
-
 
 /* ============================================================
    BOOT SCREEN
@@ -1238,7 +1224,6 @@ function nextBootLine() {
     }
 }
 
-
 /* ============================================================
    DESKTOP STARS
 ============================================================ */
@@ -1269,7 +1254,6 @@ function createStars(containerId, amount, colors) {
         container.appendChild(star);
     }
 }
-
 
 /* ============================================================
    BIRTHDAY
@@ -1302,7 +1286,6 @@ function birthday() {
     typeWriter();
 }
 
-
 /* ============================================================
    ABOUT
 ============================================================ */
@@ -1311,7 +1294,6 @@ function about() {
     showScreen("aboutScreen");
 }
 
-
 /* ============================================================
    NEXT DESTINATION
 ============================================================ */
@@ -1319,7 +1301,6 @@ function about() {
 function nextDestination() {
     showScreen("destinationScreen");
 }
-
 
 /* ============================================================
    BIRTHDAY GAME
@@ -1356,7 +1337,6 @@ function birthdayGame() {
     `;
 }
 
-
 function yesFirst() {
 
     const question =
@@ -1386,7 +1366,6 @@ function yesFirst() {
     `;
 }
 
-
 function yesAnswer() {
 
     const question =
@@ -1409,7 +1388,6 @@ function yesAnswer() {
     buttons.innerHTML = "";
 }
 
-
 function noAnswer() {
 
     const question =
@@ -1431,7 +1409,6 @@ function noAnswer() {
 
     buttons.innerHTML = "";
 }
-
 
 /* ============================================================
    LITTLE THINGS
@@ -1491,7 +1468,6 @@ const messages = [
     ["You're Enough", "YOU'RE ENOUGH."],
     ["Good Energy", "GOOD ENERGY."]
 ];
-
 
 function littleThings() {
 
@@ -1575,7 +1551,6 @@ function littleThings() {
     });
 }
 
-
 /* ============================================================
    DEVELOPER EASTER EGG
 ============================================================ */
@@ -1597,7 +1572,6 @@ developerEgg.addEventListener("mouseleave", () => {
         ".... --- .--. . ... / - .... .. ... / -- .- -.. . / " +
         "-.-- --- ..- / ... -- .. .-.. .";
 });
-
 
 /* ============================================================
    SECRET
@@ -1622,7 +1596,6 @@ function secret() {
 
     setTimeout(() => input.focus(), 50);
 }
-
 
 function unlockSecret() {
 
@@ -1663,7 +1636,6 @@ function unlockSecret() {
     }
 }
 
-
 /* ============================================================
    ENTER KEY FOR PASSWORD
 ============================================================ */
@@ -1678,7 +1650,6 @@ document
 
     });
 
-
 /* ============================================================
    SECRET FILE
 ============================================================ */
@@ -1687,7 +1658,6 @@ function secretFile() {
     showScreen("secretFileScreen");
 }
 
-
 /* ============================================================
    FINAL MESSAGE
 ============================================================ */
@@ -1695,7 +1665,6 @@ function secretFile() {
 function finalMessage() {
     showScreen("finalScreen");
 }
-
 
 /* ============================================================
    ESCAPE
@@ -1714,7 +1683,6 @@ document.addEventListener("keydown", event => {
     }
 
 });
-
 
 /* ============================================================
    START
