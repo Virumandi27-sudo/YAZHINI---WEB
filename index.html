@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAZHINI.EXE</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+background:#080A12;
+color:#F2F4FF;
+font-family:Segoe UI,sans-serif;
+overflow:hidden;
+}
+
+#boot,#desktop{
+position:absolute;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+#desktop{display:none;}
+
+.logo{
+font-family:Consolas;
+font-size:48px;
+font-weight:bold;
+color:#8B7CFF;
+margin-bottom:20px;
+}
+
+#bootText{
+font-family:Consolas;
+white-space:pre-line;
+color:#F2F4FF;
+line-height:1.5;
+}
+
+.topbar{
+position:absolute;
+top:0;
+left:0;
+right:0;
+height:55px;
+background:#101522;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 20px;
+font-family:Consolas;
+font-size:14px;
+}
+
+.grid{
+margin-top:70px;
+display:grid;
+grid-template-columns:repeat(3,220px);
+gap:25px;
+}
+
+.card{
+background:#101522;
+border:1px solid #1C2335;
+height:115px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+border-radius:14px;
+cursor:pointer;
+transition:.25s;
+}
+
+.card:hover{
+background:#151B2B;
+border-color:#8B7CFF;
+transform:translateY(-3px);
+}
+
+.icon{font-size:28px;margin-bottom:6px}
+.label{font-weight:bold;font-size:14px}
+
+.center{
+text-align:center;
+margin-bottom:25px;
+}
+
+#popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.7);
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.window{
+background:#101522;
+width:700px;
+max-width:90%;
+padding:35px;
+border-radius:18px;
+border:1px solid #2A3150;
+position:relative;
+max-height:85vh;
+overflow:auto;
+}
+
+.close{
+position:absolute;
+top:15px;
+right:20px;
+cursor:pointer;
+color:#7E879F;
+font-size:22px;
+}
+
+.btn{
+margin-top:20px;
+background:#151B2B;
+border:none;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+cursor:pointer;
+}
+
+.route{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin:20px 0;
+}
+
+.route .line{
+width:3px;
+height:40px;
+background:#7E879F;
+}
+
+.km{
+font-family:Consolas;
+font-size:32px;
+font-weight:bold;
+color:#8B7CFF;
+}
+
+audio{
+display:none;
+}
+</style>
+</head>
+
+<body>
+
+<audio id="bgm" loop>
+<source src="First-Sight.mp3.mpeg" type="audio/mpeg">
+</audio>
+
+<div id="boot">
+<div class="logo">YAZHINI.EXE</div>
+<div id="bootText"></div>
+</div>
+
+<div id="desktop">
+
+<div class="topbar">
+<div>YAZHINI.EXE</div>
+<div style="color:#61E294;">● SYSTEM ONLINE</div>
+</div>
+
+<div class="center">
+<h1>WELCOME, YAZHINI.</h1>
+<p style="color:#7E879F;margin-top:8px;">There are a few things hidden around here.</p>
+</div>
+
+<div class="grid">
+
+<div class="card" onclick="openPopup('birthday')">
+<div class="icon">🎂</div>
+<div class="label">BIRTHDAY</div>
+</div>
+
+<div class="card" onclick="openPopup('about')">
+<div class="icon">👤</div>
+<div class="label">ABOUT</div>
+</div>
+
+<div class="card" onclick="openPopup('next')">
+<div class="icon">🎓</div>
+<div class="label">NEXT DESTINATION</div>
+</div>
+
+<div class="card" onclick="openPopup('game')">
+<div class="icon">🎮</div>
+<div class="label">GAME</div>
+</div>
+
+<div class="card" onclick="openPopup('secret')">
+<div class="icon">🔒</div>
+<div class="label">SECRET</div>
+</div>
+
+<div class="card" onclick="openPopup('message')">
+<div class="icon">💌</div>
+<div class="label">MESSAGE</div>
+</div>
+
+</div>
+
+</div>
+
+<div id="popup">
+<div class="window">
+
+<div class="close" onclick="closePopup()">✕</div>
+
+<div id="content"></div>
+
+</div>
+</div>
+
+<script>
+const lines=[
+"INITIALIZING PERSONAL SYSTEM...",
+"",
+"Loading birthday protocol...",
+"Loading memories...",
+"Loading tiny surprises...",
+"Searching for Yazhini...",
+"",
+"USER FOUND.",
+"",
+"IDENTITY: YAZHINI",
+"ACCESS LEVEL: SPECIAL",
+"",
+"SYSTEM READY."
+];
+
+let i=0;
+
+function boot(){
+
+if(i<lines.length){
+
+bootText.innerHTML+=lines[i]+"<br>";
+i++;
+
+setTimeout(boot,170);
+
+}else{
+
+setTimeout(()=>{
+
+boot.style.display="none";
+desktop.style.display="flex";
+
+document.getElementById("bgm").play().catch(()=>{});
+
+},900);
+
+}
+
+}
+
+setTimeout(boot,500);
+
+function openPopup(type){
+
+popup.style.display="flex";
+
+const c=document.getElementById("content");
+
+if(type==="birthday"){
+c.innerHTML=`
+<h1 style="color:#FF6FAE;">Happy Birthday, Yazhini 🎂</h1>
+<p style="margin-top:20px;">
+Today the system has one very important task.
+<br><br>
+Make sure Yazhini has a good birthday.
+</p>`;
+}
+
+if(type==="about"){
+c.innerHTML=`
+<h1>ABOUT THE USER</h1>
+<pre style="margin-top:20px;font-family:Consolas;">
+STATUS       : SPECIAL
+ROLE         : SENIOR
+CURRENT TASK : UNIVERSITY
+LOCATION     : SOMEWHERE NEW
+</pre>`;
+}
+
+if(type==="next"){
+c.innerHTML=`
+<h1>NEXT DESTINATION</h1>
+
+<div class="route">
+
+<div style="font-size:42px;">🏠</div>
+<div style="color:#45E0C4;font-weight:bold;">HOME</div>
+
+<div class="line"></div>
+
+<div class="km">424 KM</div>
+<div style="color:#7E879F;">from home to a new beginning.</div>
+
+<div class="line"></div>
+
+<div style="font-size:42px;">🎓</div>
+<div style="color:#8B7CFF;font-weight:bold;">UNIVERSITY</div>
+
+</div>
+
+<p style="text-align:center;line-height:1.7;">
+424 km is a long way from home.
+<br><br>
+New places might feel strange at first.
+You might miss the people you're used to seeing every day.
+<br><br>
+But home doesn't become farther just because the distance gets bigger.
+<br><br>
+Wherever this new chapter takes you,
+I hope you always have reasons to smile.
+<br><br>
+You've got this, senior. ❤️
+</p>`;
+}
+
+if(type==="game"){
+c.innerHTML=`
+<h1>Do you like chocolate? 🍫</h1>
+
+<button class="btn" onclick="gameYes()">YES</button>
+<button class="btn" onclick="gameYes()">NO</button>
+
+<div id="gameArea"></div>`;
+}
+
+if(type==="secret"){
+c.innerHTML=`
+<h1>SECRET FILE</h1>
+
+<input id="pass"
+placeholder="Password"
+style="margin-top:20px;padding:10px;width:100%;background:#151B2B;color:white;border:none;border-radius:8px;">
+
+<button class="btn" onclick="unlock()">UNLOCK</button>
+
+<div id="unlockMsg" style="margin-top:15px;"></div>`;
+}
+
+if(type==="message"){
+c.innerHTML=`
+<h1>SYSTEM MESSAGE</h1>
+
+<p style="margin-top:20px;line-height:1.8;text-align:center;">
+You probably expected a birthday wish.
+<br><br>
+Instead, you got a whole unnecessary computer program 😂
+<br><br>
+Happy Birthday, Yazhini.
+<br><br>
+I hope university brings you good people,
+good experiences,
+and plenty of reasons to smile.
+</p>`;
+}
+
+}
+
+function closePopup(){
+
+popup.style.display="none";
+
+}
+
+function gameYes(){
+
+gameArea.innerHTML=`
+<h2 style="margin-top:25px;color:#FF6FAE;">
+Do you like me?
+</h2>
+
+<button class="btn"
+onclick="gameArea.innerHTML='<h2 style=color:#61E294>Well... that wasn\\'t expected 👀</h2>'">
+YES
+</button>
+
+<button class="btn"
+onclick="gameArea.innerHTML='<h2>The system has recorded your answer 😂</h2>'">
+NO
+</button>`;
+
+}
+
+function unlock(){
+
+if(pass.value.toUpperCase()==="YAZHUMAA"){
+
+unlockMsg.innerHTML=`
+<p style="color:#61E294;">
+ACCESS GRANTED.
+</p>
+
+<p style="margin-top:20px;">
+We haven't known each other for very long.
+<br><br>
+But somehow,
+you're still someone
+I wanted to make something for.
+<br><br>
+Happy Birthday, Yazhini. :)
+</p>`;
+
+}else{
+
+unlockMsg.innerHTML='<p style="color:#FF5577;">ACCESS DENIED.</p>';
+
+}
+
+}
+</script>
+
+</body>
+</html>
