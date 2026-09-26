@@ -1,345 +1,1933 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>YAZHINI.EXE</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-background:#080A12;
-color:#F2F4FF;
-font-family:Segoe UI,sans-serif;
-overflow:hidden;
-}
-#boot,#desktop{
-position:absolute;
-inset:0;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-}
-#desktop{display:none;}
-.logo{
-font-family:Consolas;
-font-size:48px;
-font-weight:bold;
-color:#8B7CFF;
-margin-bottom:20px;
-}
-#bootText{
-font-family:Consolas;
-white-space:pre-line;
-color:#F2F4FF;
-line-height:1.5;
-}
-.topbar{
-position:absolute;
-top:0;
-left:0;
-right:0;
-height:55px;
-background:#101522;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 20px;
-font-family:Consolas;
-font-size:14px;
-}
-.grid{
-margin-top:70px;
-display:grid;
-grid-template-columns:repeat(3,220px);
-gap:25px;
-}
-.card{
-background:#101522;
-border:1px solid #1C2335;
-height:115px;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-border-radius:14px;
-cursor:pointer;
-transition:.25s;
-}
-.card:hover{
-background:#151B2B;
-border-color:#8B7CFF;
-transform:translateY(-3px);
-}
-.icon{font-size:28px;margin-bottom:6px}
-.label{font-weight:bold;font-size:14px}
-.center{
-text-align:center;
-margin-bottom:25px;
-}
-#popup{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.7);
-display:none;
-justify-content:center;
-align-items:center;
-}
-.window{
-background:#101522;
-width:700px;
-max-width:90%;
-padding:35px;
-border-radius:18px;
-border:1px solid #2A3150;
-position:relative;
-max-height:85vh;
-overflow:auto;
-}
-.close{
-position:absolute;
-top:15px;
-right:20px;
-cursor:pointer;
-color:#7E879F;
-font-size:22px;
-}
-.btn{
-margin-top:20px;
-background:#151B2B;
-border:none;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-cursor:pointer;
-}
-.route{
-display:flex;
-flex-direction:column;
-align-items:center;
-margin:20px 0;
-}
-.route .line{
-width:3px;
-height:40px;
-background:#7E879F;
-}
-.km{
-font-family:Consolas;
-font-size:32px;
-font-weight:bold;
-color:#8B7CFF;
-}
-audio{
-display:none;
-}
-</style>
-</head>
-<body>
-<audio id="bgm" loop>
-<source src="First-Sight.mp3.mpeg" type="audio/mpeg">
-</audio>
-<div id="boot">
-<div class="logo">YAZHINI.EXE</div>
-<div id="bootText"></div>
-</div>
-<div id="desktop">
-<div class="topbar">
-<div>YAZHINI.EXE</div>
-<div style="color:#61E294;">● SYSTEM ONLINE</div>
-</div>
-<div class="center">
-<h1>WELCOME, YAZHINI.</h1>
-<p style="color:#7E879F;margin-top:8px;">There are a few things hidden around here.</p>
-</div>
-<div class="grid">
-<div class="card" onclick="openPopup('birthday')">
-<div class="icon">🎂</div>
-<div class="label">BIRTHDAY</div>
-</div>
-<div class="card" onclick="openPopup('about')">
-<div class="icon">👤</div>
-<div class="label">ABOUT</div>
-</div>
-<div class="card" onclick="openPopup('next')">
-<div class="icon">🎓</div>
-<div class="label">NEXT DESTINATION</div>
-</div>
-<div class="card" onclick="openPopup('game')">
-<div class="icon">🎮</div>
-<div class="label">GAME</div>
-</div>
-<div class="card" onclick="openPopup('secret')">
-<div class="icon">🔒</div>
-<div class="label">SECRET</div>
-</div>
-<div class="card" onclick="openPopup('message')">
-<div class="icon">💌</div>
-<div class="label">MESSAGE</div>
-</div>
-</div>
-</div>
-<div id="popup">
-<div class="window">
-<div class="close" onclick="closePopup()">✕</div>
-<div id="content"></div>
-</div>
-</div>
-<script>
-const lines=[
-"INITIALIZING PERSONAL SYSTEM...",
-"",
-"Loading birthday protocol...",
-"Loading memories...",
-"Loading tiny surprises...",
-"Searching for Yazhini...",
-"",
-"USER FOUND.",
-"",
-"IDENTITY: YAZHINI",
-"ACCESS LEVEL: SPECIAL",
-"",
-"SYSTEM READY."
-];
-let i=0;
-const bootScreen=document.getElementById("boot");
-const bootText=document.getElementById("bootText");
-const desktop=document.getElementById("desktop");
-const popup=document.getElementById("popup");
-function startBoot(){
-if(i<lines.length){
-bootText.innerHTML+=lines[i]+"<br>";
-i++;
-setTimeout(startBoot,170);
-}else{
-setTimeout(()=>{
-bootScreen.style.display="none";
-desktop.style.display="flex";
-document.getElementById("bgm").play().catch(()=>{});
-},900);
-}
-}
-setTimeout(startBoot,500);
-function openPopup(type){
-popup.style.display="flex";
-const c=document.getElementById("content");
-if(type==="birthday"){
-c.innerHTML=`
-<h1 style="color:#FF6FAE;">Happy Birthday, Yazhini 🎂</h1>
-<p style="margin-top:20px;">
-Today the system has one very important task.
-<br><br>
-Make sure Yazhini has a good birthday.
-</p>`;
-}
-if(type==="about"){
-c.innerHTML=`
-<h1>ABOUT THE USER</h1>
-<pre style="margin-top:20px;font-family:Consolas;">
-STATUS       : SPECIAL
-ROLE         : SENIOR
-CURRENT TASK : UNIVERSITY
-LOCATION     : SOMEWHERE NEW
-</pre>`;
-}
-if(type==="next"){
-c.innerHTML=`
-<h1>NEXT DESTINATION</h1>
-<div class="route">
-<div style="font-size:42px;">🏠</div>
-<div style="color:#45E0C4;font-weight:bold;">HOME</div>
-<div class="line"></div>
-<div class="km">424 KM</div>
-<div style="color:#7E879F;">from home to a new beginning.</div>
-<div class="line"></div>
-<div style="font-size:42px;">🎓</div>
-<div style="color:#8B7CFF;font-weight:bold;">UNIVERSITY</div>
-</div>
-<p style="text-align:center;line-height:1.7;">
-424 km is a long way from home.
-<br><br>
-New places might feel strange at first.
-You might miss the people you're used to seeing every day.
-<br><br>
-But home doesn't become farther just because the distance gets bigger.
-<br><br>
-Wherever this new chapter takes you,
-I hope you always have reasons to smile.
-<br><br>
-You've got this, senior. ❤️
-</p>`;
-}
-if(type==="game"){
-c.innerHTML=`
-<h1>Do you like chocolate? 🍫</h1>
-<button class="btn" onclick="gameYes()">YES</button>
-<button class="btn" onclick="gameYes()">NO</button>
-<div id="gameArea"></div>`;
-}
-if(type==="secret"){
-c.innerHTML=`
-<h1>SECRET FILE</h1>
-<input id="pass"
-placeholder="Password"
-style="margin-top:20px;padding:10px;width:100%;background:#151B2B;color:white;border:none;border-radius:8px;">
-<button class="btn" onclick="unlock()">UNLOCK</button>
-<div id="unlockMsg" style="margin-top:15px;"></div>`;
-}
-if(type==="message"){
-c.innerHTML=`
-<h1>SYSTEM MESSAGE</h1>
-<p style="margin-top:20px;line-height:1.8;text-align:center;">
-You probably expected a birthday wish.
-<br><br>
-Instead, you got a whole unnecessary computer program 😂
-<br><br>
-Happy Birthday, Yazhini.
-<br><br>
-I hope university brings you good people,
-good experiences,
-and plenty of reasons to smile.
-</p>`;
-}
-}
-function closePopup(){
-popup.style.display="none";
-}
-function gameYes(){
-const gameArea=document.getElementById("gameArea");
-gameArea.innerHTML=`
-<h2 style="margin-top:25px;color:#FF6FAE;">
-Do you like me?
-</h2>
-<button class="btn"
-onclick="gameArea.innerHTML='<h2 style=color:#61E294>Well... that wasn\\'t expected 👀</h2>'">
-YES
-</button>
-<button class="btn"
-onclick="gameArea.innerHTML='<h2>The system has recorded your answer 😂</h2>'">
-NO
-</button>`;
-}
-function unlock(){
-const pass=document.getElementById("pass");
-const unlockMsg=document.getElementById("unlockMsg");
-if(pass.value.toUpperCase()==="YAZHUMAA"){
-unlockMsg.innerHTML=`
-<p style="color:#61E294;">
-ACCESS GRANTED.
-</p>
-<p style="margin-top:20px;">
-We haven't known each other for very long.
-<br><br>
-But somehow,
-you're still someone
-I wanted to make something for.
-<br><br>
-Happy Birthday, Yazhini. :)
-</p>`;
-}else{
-unlockMsg.innerHTML='<p style="color:#FF5577;">ACCESS DENIED.</p>';
-}
-}
-</script>
-</body>
-</html>
+import tkinter as tk
+import random
+import time
+import pygame
+import os
+# ============================================================
+# YAZHINI.EXE
+# Interactive Birthday Experience
+# ============================================================
+# ---------------- COLORS ----------------
+BG = "#080A12"
+PANEL = "#101522"
+PANEL_2 = "#151B2B"
+TEXT = "#F2F4FF"
+MUTED = "#7E879F"
+ACCENT = "#8B7CFF"
+ACCENT_2 = "#45E0C4"
+PINK = "#FF6FAE"
+RED = "#FF5577"
+GREEN = "#61E294"
+YELLOW = "#FFD166"
+# ---------------- MAIN WINDOW ----------------
+root = tk.Tk()
+root.title("YAZHINI.EXE")
+root.configure(bg=BG)
+try:
+    root.attributes("-fullscreen", True)
+except:
+    root.geometry("1200x750")
+root.update_idletasks()
+SCREEN_W = root.winfo_screenwidth()
+SCREEN_H = root.winfo_screenheight()
+# ============================================================
+# MUSIC
+# ============================================================
+pygame.mixer.init()
+music_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "First-Sight.mp3.mpeg"
+)
+pygame.mixer.music.load(music_path)
+pygame.mixer.music.set_volume(1.0)
+pygame.mixer.music.play(-1)
+# ============================================================
+# GENERAL UTILITIES
+# ============================================================
+def clear_screen():
+    for widget in root.winfo_children():
+        widget.destroy()
+def type_text(label, text, delay=25, callback=None):
+    label.config(text="")
+    def write(i=0):
+        if i < len(text):
+            label.config(text=text[:i + 1])
+            root.after(delay, lambda: write(i + 1))
+        else:
+            if callback:
+                callback()
+    write()
+def button(parent, text, command, width=22):
+    b = tk.Button(
+        parent,
+        text=text,
+        command=command,
+        width=width,
+        height=2,
+        bg=PANEL_2,
+        fg=TEXT,
+        activebackground=ACCENT,
+        activeforeground="white",
+        relief="flat",
+        bd=0,
+        font=("Segoe UI", 11, "bold"),
+        cursor="hand2"
+    )
+    def enter(event):
+        b.config(bg=ACCENT)
+    def leave(event):
+        b.config(bg=PANEL_2)
+    b.bind("<Enter>", enter)
+    b.bind("<Leave>", leave)
+    return b
+def title(parent, text):
+    lbl = tk.Label(
+        parent,
+        text=text,
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI", 25, "bold")
+    )
+    return lbl
+def subtitle(parent, text):
+    lbl = tk.Label(
+        parent,
+        text=text,
+        bg=BG,
+        fg=MUTED,
+        font=("Segoe UI", 11)
+    )
+    return lbl
+def close_button(parent):
+    b = tk.Button(
+        parent,
+        text="← BACK",
+        command=desktop,
+        bg=BG,
+        fg=MUTED,
+        activebackground=BG,
+        activeforeground=TEXT,
+        relief="flat",
+        bd=0,
+        font=("Segoe UI", 10, "bold"),
+        cursor="hand2"
+    )
+    b.pack(anchor="w", padx=35, pady=(25, 0))
+    return b
+# ============================================================
+# BOOT SCREEN
+# ============================================================
+def boot_screen():
+    clear_screen()
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    logo = tk.Label(
+        frame,
+        text="YAZHINI.EXE",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 30, "bold")
+    )
+    logo.pack(pady=(0, 30))
+    boot_label = tk.Label(
+        frame,
+        text="",
+        bg=BG,
+        fg=TEXT,
+        justify="left",
+        font=("Consolas", 12),
+        width=55
+    )
+    boot_label.pack()
+    lines = [
+        "INITIALIZING PERSONAL SYSTEM...",
+        "",
+        "Loading birthday protocol...",
+        "Loading memories...",
+        "Loading tiny surprises...",
+        "Searching for Yazhini...",
+        "",
+        "USER FOUND.",
+        "",
+        "IDENTITY: YAZHINI",
+        "ACCESS LEVEL: SPECIAL",
+        "",
+        "SYSTEM READY."
+    ]
+    index = 0
+    def next_line():
+        nonlocal index
+        if index < len(lines):
+            current = boot_label.cget("text")
+            if current:
+                current += "\n"
+            current += lines[index]
+            boot_label.config(text=current)
+            index += 1
+            root.after(170, next_line)
+        else:
+            root.after(900, desktop)
+    next_line()
+# ============================================================
+# DESKTOP
+# ============================================================
+def desktop():
+    clear_screen()
+    canvas = tk.Canvas(
+        root,
+        bg=BG,
+        highlightthickness=0
+    )
+    canvas.pack(fill="both", expand=True)
+    random.seed(7)
+    for _ in range(180):
+        x = random.randint(0, SCREEN_W)
+        y = random.randint(0, SCREEN_H)
+        size = random.choice([1, 1, 1, 2])
+        canvas.create_oval(
+            x,
+            y,
+            x + size,
+            y + size,
+            fill=random.choice([
+                "#171C2A",
+                "#1C2232",
+                "#20263A",
+                "#242B40"
+            ]),
+            outline=""
+        )
+    canvas.create_rectangle(
+        0,
+        0,
+        SCREEN_W,
+        55,
+        fill=PANEL,
+        outline=""
+    )
+    canvas.create_text(
+        25,
+        28,
+        text="YAZHINI.EXE",
+        fill=ACCENT,
+        font=("Consolas", 12, "bold"),
+        anchor="w"
+    )
+    canvas.create_text(
+        SCREEN_W // 2,
+        28,
+        text="PERSONAL SYSTEM",
+        fill=MUTED,
+        font=("Consolas", 10),
+        anchor="center"
+    )
+    canvas.create_text(
+        SCREEN_W - 25,
+        28,
+        text="● SYSTEM ONLINE",
+        fill=GREEN,
+        font=("Consolas", 10, "bold"),
+        anchor="e"
+    )
+    canvas.create_text(
+        SCREEN_W // 2,
+        110,
+        text="WELCOME, YAZHINI.",
+        fill=TEXT,
+        font=("Segoe UI", 26, "bold")
+    )
+    canvas.create_text(
+        SCREEN_W // 2,
+        145,
+        text="There are a few things hidden around here.",
+        fill=MUTED,
+        font=("Segoe UI", 11)
+    )
+    apps = [
+        ("🎂", "BIRTHDAY", birthday),
+        ("👤", "ABOUT", about),
+        ("🎓", "NEXT DESTINATION", next_destination),
+        ("🎮", "BIRTHDAY GAME", birthday_game),
+        ("⭐", "LITTLE THINGS", little_things),
+        ("🔒", "SECRET", secret),
+        ("💌", "MESSAGE", final_message)
+    ]
+    start_y = 205
+    positions = [
+        (SCREEN_W // 2 - 270, start_y),
+        (SCREEN_W // 2, start_y),
+        (SCREEN_W // 2 + 270, start_y),
+        (SCREEN_W // 2 - 270, start_y + 145),
+        (SCREEN_W // 2, start_y + 145),
+        (SCREEN_W // 2 + 270, start_y + 145),
+        (SCREEN_W // 2, start_y + 290)
+    ]
+    for (icon, name, command), (x, y) in zip(apps, positions):
+        card = tk.Frame(
+            root,
+            bg=PANEL,
+            width=220,
+            height=115,
+            highlightthickness=1,
+            highlightbackground="#1C2335"
+        )
+        # Keep every desktop card exactly the same size
+        card.pack_propagate(False)
+        card.place(
+            x=x - 110,
+            y=y
+        )
+        icon_label = tk.Label(
+            card,
+            text=icon,
+            bg=PANEL,
+            fg=TEXT,
+            font=("Segoe UI Emoji", 23)
+        )
+        icon_label.pack(pady=(13, 3))
+        text_label = tk.Label(
+            card,
+            text=name,
+            bg=PANEL,
+            fg=TEXT,
+            font=("Segoe UI", 10, "bold")
+        )
+        text_label.pack()
+        def click(event, cmd=command):
+            cmd()
+        def hover_in(event, c=card, i=icon_label, t=text_label):
+            c.config(
+                bg=PANEL_2,
+                highlightbackground=ACCENT
+            )
+            i.config(bg=PANEL_2)
+            t.config(bg=PANEL_2, fg=ACCENT)
+        def hover_out(event, c=card, i=icon_label, t=text_label):
+            c.config(
+                bg=PANEL,
+                highlightbackground="#1C2335"
+            )
+            i.config(bg=PANEL)
+            t.config(bg=PANEL, fg=TEXT)
+        for widget in [card, icon_label, text_label]:
+            widget.bind("<Button-1>", click)
+            widget.bind("<Enter>", hover_in)
+            widget.bind("<Leave>", hover_out)
+    canvas.create_text(
+        SCREEN_W // 2,
+        SCREEN_H - 30,
+        text="ESC  •  EXIT SYSTEM",
+        fill="#3B435A",
+        font=("Consolas", 9)
+    )
+# ============================================================
+# BIRTHDAY
+# ============================================================
+def birthday():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    lbl = tk.Label(
+        frame,
+        text="",
+        bg=BG,
+        fg=PINK,
+        font=("Segoe UI", 38, "bold")
+    )
+    lbl.pack(pady=20)
+    message = tk.Label(
+        frame,
+        text="",
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI", 14),
+        justify="center"
+    )
+    message.pack(pady=15)
+    type_text(
+        lbl,
+        "HAPPY BIRTHDAY, YAZHINI 🎂",
+        45
+    )
+    message.config(
+        text="\n".join([
+            "",
+            "Today, the system has one very important task.",
+            "",
+            "Make sure Yazhini has a good birthday. ✨",
+            "",
+            "SYSTEM PRIORITY: 100%"
+        ])
+    )
+# ============================================================
+# ABOUT
+# ============================================================
+def about():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    title(frame, "ABOUT THE USER").pack(pady=(10, 20))
+    tk.Label(
+        frame,
+        text="YAZHINI",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 25, "bold")
+    ).pack()
+    tk.Label(
+        frame,
+        text="",
+        bg=BG
+    ).pack()
+    info = [
+        "STATUS       : SPECIAL",
+        "ROLE         : SENIOR",
+        "CURRENT TASK : UNIVERSITY",
+        "LOCATION     : SOMEWHERE NEW",
+        "",
+        "PERSONALITY SCAN...",
+        "",
+        "→ Interesting",
+        "→ Probably dangerous when bored",
+        "→ Definitely birthday-worthy",
+        "",
+        "SCAN COMPLETE."
+    ]
+    tk.Label(
+        frame,
+        text="\n".join(info),
+        bg=BG,
+        fg=TEXT,
+        justify="left",
+        font=("Consolas", 12)
+    ).pack(pady=15)
+# ============================================================
+# NEXT DESTINATION
+# ============================================================
+def next_destination():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    title(frame, "NEXT DESTINATION").pack(pady=(10, 10))
+    subtitle(
+        frame,
+        "A new chapter is loading..."
+    ).pack(pady=(0, 25))
+    tk.Label(
+        frame,
+        text="🏠",
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI Emoji", 42)
+    ).pack()
+    tk.Label(
+        frame,
+        text="HOME",
+        bg=BG,
+        fg=ACCENT_2,
+        font=("Consolas", 20, "bold")
+    ).pack(pady=(5, 8))
+    tk.Label(
+        frame,
+        text="│",
+        bg=BG,
+        fg=MUTED,
+        font=("Consolas", 16)
+    ).pack()
+    tk.Label(
+        frame,
+        text="424 KM",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 26, "bold")
+    ).pack(pady=5)
+    tk.Label(
+        frame,
+        text="from home to a new beginning.",
+        bg=BG,
+        fg=MUTED,
+        font=("Segoe UI", 10, "italic")
+    ).pack(pady=(0, 8))
+    tk.Label(
+        frame,
+        text="│",
+        bg=BG,
+        fg=MUTED,
+        font=("Consolas", 16)
+    ).pack()
+    tk.Label(
+        frame,
+        text="🎓",
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI Emoji", 42)
+    ).pack()
+    tk.Label(
+        frame,
+        text="UNIVERSITY",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 20, "bold")
+    ).pack(pady=(5, 18))
+    message = (
+        "424 km is a long way from home.\n\n"
+        "New places might feel strange at first.\n"
+        "You might miss the people you're used to seeing every day.\n\n"
+        "But home doesn't become farther just because the distance gets bigger.\n\n"
+        "And wherever this new chapter takes you,\n"
+        "I hope you always have reasons to smile.\n\n"
+        "You've got this, senior. 🎓"
+    )
+    tk.Label(
+        frame,
+        text=message,
+        bg=BG,
+        fg=TEXT,
+        justify="center",
+        font=("Segoe UI", 12),
+        wraplength=750
+    ).pack(pady=10)
+    tk.Label(
+        frame,
+        text="SYSTEM MESSAGE: GOOD LUCK, SENIOR. ✨",
+        bg=BG,
+        fg=ACCENT_2,
+        font=("Consolas", 11, "bold")
+    ).pack(pady=12)
+# ============================================================
+# BIRTHDAY GAME
+# ============================================================
+def birthday_game():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    question = tk.Label(
+        frame,
+        text="Do you like chocolate? 🍫",
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI", 24, "bold")
+    )
+    question.pack(pady=35)
+    status = tk.Label(
+        frame,
+        text="",
+        bg=BG,
+        fg=MUTED,
+        font=("Segoe UI", 11)
+    )
+    status.pack(pady=10)
+    buttons_frame = tk.Frame(frame, bg=BG)
+    buttons_frame.pack(pady=20)
+    # --------------------------------------------------------
+    # CHOCOLATE QUESTION
+    # --------------------------------------------------------
+    def yes_first():
+        question.config(
+            text="Do you like me?",
+            fg=PINK
+        )
+        status.config(
+            text="Please answer honestly."
+        )
+        for widget in buttons_frame.winfo_children():
+            widget.destroy()
+        yes = button(
+            buttons_frame,
+            "YES 👀",
+            yes_answer,
+            15
+        )
+        no = button(
+            buttons_frame,
+            "NO 😂",
+            no_answer,
+            15
+        )
+        yes.grid(row=0, column=0, padx=10)
+        no.grid(row=0, column=1, padx=10)
+    def yes_answer():
+        question.config(
+            text="Well... that wasn't expected. 👀",
+            fg=GREEN
+        )
+        status.config(
+            text="SYSTEM HAS SUCCESSFULLY RECORDED YOUR ANSWER."
+        )
+        for widget in buttons_frame.winfo_children():
+            widget.destroy()
+    def no_answer():
+        question.config(
+            text="The system has recorded your answer. 😂",
+            fg=TEXT
+        )
+        status.config(
+            text="No awkwardness detected."
+        )
+        for widget in buttons_frame.winfo_children():
+            widget.destroy()
+    yes = button(
+        buttons_frame,
+        "YES 🍫",
+        yes_first,
+        15
+    )
+    no = button(
+        buttons_frame,
+        "NO",
+        yes_first,
+        15
+    )
+    yes.grid(row=0, column=0, padx=10)
+    no.grid(row=0, column=1, padx=10)
+# ============================================================
+# LITTLE THINGS
+# MULTILINGUAL HIDDEN MESSAGE MAP
+# ============================================================
+def little_things():
+    clear_screen()
+    canvas = tk.Canvas(
+        root,
+        bg=BG,
+        highlightthickness=0
+    )
+    canvas.pack(fill="both", expand=True)
+    canvas.create_text(
+        SCREEN_W // 2,
+        35,
+        text="LITTLE THINGS",
+        fill=TEXT,
+        font=("Segoe UI", 20, "bold")
+    )
+    canvas.create_text(
+        SCREEN_W // 2,
+        65,
+        text="Some things are easier to find than others.",
+        fill=MUTED,
+        font=("Segoe UI", 10)
+    )
+    tk.Button(
+        root,
+        text="← BACK",
+        command=desktop,
+        bg=PANEL,
+        fg=MUTED,
+        relief="flat",
+        bd=0,
+        cursor="hand2"
+    ).place(
+        x=25,
+        y=25
+    )
+    # Background stars
+    for _ in range(250):
+        x = random.randint(0, SCREEN_W)
+        y = random.randint(90, SCREEN_H)
+        s = random.choice([1, 1, 2])
+        canvas.create_oval(
+            x,
+            y,
+            x + s,
+            y + s,
+            fill=random.choice([
+                "#111827",
+                "#182033",
+                "#222A3A"
+            ]),
+            outline=""
+        )
+    # --------------------------------------------------------
+    # POSITIVE HIDDEN MESSAGES
+    # --------------------------------------------------------
+    messages = [
+        ("ありがとう", "THANK YOU."),
+        ("Bonne chance", "GOOD LUCK."),
+        ("Sigue adelante", "KEEP GOING."),
+        ("Viel Glück", "YOU'VE GOT THIS."),
+        ("Будь счастлива", "STAY HAPPY."),
+        ("我相信你", "I BELIEVE IN YOU."),
+        ("넌 잘할 거야", "YOU'LL DO GREAT."),
+        ("Boa sorte", "GOOD THINGS AHEAD."),
+        ("Coraggio", "BE BRAVE."),
+        ("بالتوفيق", "BEST OF LUCK."),
+        ("शुभकामनाएँ", "BEST WISHES."),
+        ("Kaya mo 'yan", "YOU CAN DO THIS."),
+        ("Semoga berjaya", "KEEP SHINING."),
+        ("வெற்றி பெறுவாய்", "YOU'LL SUCCEED."),
+        ("சிரிச்சுட்டே இரு", "KEEP SMILING."),
+        ("சும்மா கலக்கு", "GO SHINE."),
+        ("สู้ๆ", "KEEP GOING."),
+        ("Καλή τύχη", "GOOD LUCK."),
+        ("Blijf stralen", "KEEP SHINING."),
+        ("Lycka till", "GOOD THINGS AHEAD."),
+        ("Noroc", "NEW BEGINNINGS."),
+        ("Powodzenia", "DON'T GIVE UP."),
+        ("Hakuna Matata", "STAY CALM."),
+        ("Namaste", "STAY KIND."),
+        ("سلام", "PEACE."),
+        ("Aloha", "ENJOY THE JOURNEY."),
+        ("Mi ŝatas la vivon", "ENJOY LIFE."),
+        ("Be Brave", "BE BRAVE."),
+        ("Respira", "BREATHE."),
+        ("Courage", "KEEP MOVING."),
+        ("Avanti", "MOVE FORWARD."),
+        ("Lumina", "KEEP GLOWING."),
+        ("Espero", "HOLD ONTO HOPE."),
+        ("新しい始まり", "NEW BEGINNINGS."),
+        ("未来へ", "TOWARDS TOMORROW."),
+        ("Believe", "BELIEVE."),
+        ("Smile", "KEEP SMILING."),
+        ("Dream", "DREAM BIG."),
+        ("Hope", "STAY HOPEFUL."),
+        ("Rise", "RISE HIGH."),
+        ("Keep Going", "KEEP GOING."),
+        ("You Matter", "YOU MATTER."),
+        ("Stay Curious", "STAY CURIOUS."),
+        ("One Step", "ONE STEP AT A TIME."),
+        ("Keep Learning", "KEEP LEARNING."),
+        ("Enjoy Today", "ENJOY TODAY."),
+        ("Stay Strong", "STAY STRONG."),
+        ("Stay Kind", "STAY KIND."),
+        ("Keep Creating", "KEEP CREATING."),
+        ("You're Enough", "YOU'RE ENOUGH."),
+        ("Good Energy", "GOOD ENERGY.")
+    ]
+    placed = []
+    def valid(x, y):
+        for px, py in placed:
+            if abs(x - px) < 130 and abs(y - py) < 55:
+                return False
+        return True
+    # --------------------------------------------------------
+    # PLACE HIDDEN MESSAGES
+    # --------------------------------------------------------
+    for foreign, english in messages:
+        for _ in range(300):
+            x = random.randint(
+                50,
+                SCREEN_W - 50
+            )
+            y = random.randint(
+                100,
+                SCREEN_H - 70
+            )
+            if valid(x, y):
+                break
+        placed.append((x, y))
+        item = canvas.create_text(
+            x,
+            y,
+            text=foreign,
+            fill="#171C2A",
+            font=("Segoe UI", random.choice([9, 10, 11]))
+        )
+        def reveal(event, it=item, msg=english):
+            canvas.itemconfig(
+                it,
+                text=msg,
+                fill=ACCENT_2,
+                font=("Segoe UI", 11, "bold")
+            )
+        canvas.tag_bind(
+            item,
+            "<Enter>",
+            reveal
+        )
+    # --------------------------------------------------------
+    # SECRET DEVELOPER EASTER EGG
+    # --------------------------------------------------------
+    morse = (
+        "- .... . / -.. . ...- . .-.. --- .--. . .-. / "
+        ".... --- .--. . ... / - .... .. ... / -- .- -.. . / "
+        "-.-- --- ..- / ... -- .. .-.. ."
+    )
+    dev = canvas.create_text(
+        SCREEN_W - 165,
+        SCREEN_H - 55,
+        text=morse,
+        fill="#101520",
+        font=("Consolas", 7)
+    )
+    def reveal_dev(event):
+        canvas.itemconfig(
+            dev,
+            text="The developer hopes this made you smile. :)",
+            fill=PINK,
+            font=("Segoe UI", 9, "italic")
+        )
+    canvas.tag_bind(
+        dev,
+        "<Enter>",
+        reveal_dev
+    )
+    # --------------------------------------------------------
+    # INSTRUCTION
+    # --------------------------------------------------------
+    canvas.create_text(
+        SCREEN_W // 2,
+        SCREEN_H - 25,
+        text="Move your mouse slowly... there may be things you haven't seen yet.",
+        fill="#394257",
+        font=("Segoe UI", 9)
+    )
+# ============================================================
+# SECRET
+# ============================================================
+def secret():
+    password_window = tk.Toplevel(root)
+    password_window.title("ACCESS REQUIRED")
+    password_window.configure(bg=BG)
+    password_window.geometry("440x330")
+    password_window.resizable(False, False)
+    password_window.update_idletasks()
+    x = (
+        password_window.winfo_screenwidth() // 2
+    ) - 220
+    y = (
+        password_window.winfo_screenheight() // 2
+    ) - 165
+    password_window.geometry(
+        f"440x330+{x}+{y}"
+    )
+    tk.Label(
+        password_window,
+        text="🔒 SECRET FILE",
+        bg=BG,
+        fg=ACCENT,
+        font=("Segoe UI", 22, "bold")
+    ).pack(pady=(30, 15))
+    tk.Label(
+        password_window,
+        text="THIS FILE REQUIRES AUTHORIZATION.",
+        bg=BG,
+        fg=TEXT,
+        font=("Consolas", 10)
+    ).pack(pady=5)
+    tk.Label(
+        password_window,
+        text="Hint: The name of the person this system was created for.",
+        bg=BG,
+        fg=MUTED,
+        font=("Segoe UI", 9),
+        wraplength=350
+    ).pack(pady=(10, 20))
+    entry = tk.Entry(
+        password_window,
+        bg=PANEL_2,
+        fg=TEXT,
+        insertbackground=TEXT,
+        relief="flat",
+        justify="center",
+        font=("Consolas", 13),
+        width=25
+    )
+    entry.pack(ipady=8)
+    entry.focus_set()
+    status = tk.Label(
+        password_window,
+        text="",
+        bg=BG,
+        fg=RED,
+        font=("Segoe UI", 9)
+    )
+    status.pack(pady=10)
+    # --------------------------------------------------------
+    # PASSWORD
+    # --------------------------------------------------------
+    def unlock():
+        password = entry.get().strip().upper()
+        if password == "YAZHUMAA":
+            status.config(
+                text="ACCESS GRANTED.",
+                fg=GREEN
+            )
+            password_window.update()
+            password_window.after(
+                700,
+                lambda: [
+                    password_window.destroy(),
+                    secret_file()
+                ]
+            )
+        else:
+            status.config(
+                text="ACCESS DENIED. Try again. 👀",
+                fg=RED
+            )
+            entry.delete(
+                0,
+                tk.END
+            )
+    unlock_button = button(
+        password_window,
+        "UNLOCK",
+        unlock,
+        15
+    )
+    unlock_button.pack(pady=5)
+    password_window.bind(
+        "<Return>",
+        lambda event: unlock()
+    )
+# ============================================================
+# SECRET FILE
+# ============================================================
+def secret_file():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    tk.Label(
+        frame,
+        text="YAZHINI.txt",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 24, "bold")
+    ).pack(pady=(0, 30))
+    content = (
+        "We haven't known each other for very long.\n\n"
+        "But somehow, you're still someone\n"
+        "I wanted to make something for.\n\n"
+        "Happy Birthday, Yazhini. :)\n"
+    )
+    tk.Label(
+        frame,
+        text=content,
+        bg=BG,
+        fg=TEXT,
+        justify="center",
+        font=("Segoe UI", 14),
+        wraplength=650
+    ).pack(pady=15)
+    tk.Label(
+        frame,
+        text="FILE STATUS: UNLOCKED",
+        bg=BG,
+        fg=GREEN,
+        font=("Consolas", 10, "bold")
+    ).pack(pady=25)
+# ============================================================
+# FINAL MESSAGE
+# ============================================================
+def final_message():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    tk.Label(
+        frame,
+        text="SYSTEM MESSAGE",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 14, "bold")
+    ).pack(pady=(0, 20))
+    message = (
+        "You probably expected a birthday wish.\n\n"
+        "Instead, you got a whole unnecessary computer program. 😂\n\n"
+        "But honestly...\n"
+        "Happy Birthday, Yazhini.\n\n"
+        "I hope university brings you good people,\n"
+        "good experiences, and plenty of reasons to smile.\n\n"
+        "Take care, senior. 🎓"
+    )
+    tk.Label(
+        frame,
+        text=message,
+        bg=BG,
+        fg=TEXT,
+        justify="center",
+        font=("Segoe UI", 14),
+        wraplength=750
+    ).pack()
+    tk.Label(
+        frame,
+        text="— YAZHINI.EXE",
+        bg=BG,
+        fg=PINK,
+        font=("Consolas", 11, "bold")
+    ).pack(pady=30)
+# ============================================================
+# ESCAPE TO EXIT FULLSCREEN
+# ============================================================
+def exit_fullscreen(event=None):
+    try:
+        root.attributes("-fullscreen", False)
+    except:
+        pass
+    root.destroy()
+root.bind("<Escape>", exit_fullscreen)
+# ============================================================
+# START
+# ============================================================
+boot_screen()
+root.mainloop()import tkinter as tk
+import random
+import time
+import pygame
+import os
+# ============================================================
+# YAZHINI.EXE
+# Interactive Birthday Experience
+# ============================================================
+# ---------------- COLORS ----------------
+BG = "#080A12"
+PANEL = "#101522"
+PANEL_2 = "#151B2B"
+TEXT = "#F2F4FF"
+MUTED = "#7E879F"
+ACCENT = "#8B7CFF"
+ACCENT_2 = "#45E0C4"
+PINK = "#FF6FAE"
+RED = "#FF5577"
+GREEN = "#61E294"
+YELLOW = "#FFD166"
+# ---------------- MAIN WINDOW ----------------
+root = tk.Tk()
+root.title("YAZHINI.EXE")
+root.configure(bg=BG)
+try:
+    root.attributes("-fullscreen", True)
+except:
+    root.geometry("1200x750")
+root.update_idletasks()
+SCREEN_W = root.winfo_screenwidth()
+SCREEN_H = root.winfo_screenheight()
+# ============================================================
+# MUSIC
+# ============================================================
+pygame.mixer.init()
+music_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "First-Sight.mp3.mpeg"
+)
+pygame.mixer.music.load(music_path)
+pygame.mixer.music.set_volume(1.0)
+pygame.mixer.music.play(-1)
+# ============================================================
+# GENERAL UTILITIES
+# ============================================================
+def clear_screen():
+    for widget in root.winfo_children():
+        widget.destroy()
+def type_text(label, text, delay=25, callback=None):
+    label.config(text="")
+    def write(i=0):
+        if i < len(text):
+            label.config(text=text[:i + 1])
+            root.after(delay, lambda: write(i + 1))
+        else:
+            if callback:
+                callback()
+    write()
+def button(parent, text, command, width=22):
+    b = tk.Button(
+        parent,
+        text=text,
+        command=command,
+        width=width,
+        height=2,
+        bg=PANEL_2,
+        fg=TEXT,
+        activebackground=ACCENT,
+        activeforeground="white",
+        relief="flat",
+        bd=0,
+        font=("Segoe UI", 11, "bold"),
+        cursor="hand2"
+    )
+    def enter(event):
+        b.config(bg=ACCENT)
+    def leave(event):
+        b.config(bg=PANEL_2)
+    b.bind("<Enter>", enter)
+    b.bind("<Leave>", leave)
+    return b
+def title(parent, text):
+    lbl = tk.Label(
+        parent,
+        text=text,
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI", 25, "bold")
+    )
+    return lbl
+def subtitle(parent, text):
+    lbl = tk.Label(
+        parent,
+        text=text,
+        bg=BG,
+        fg=MUTED,
+        font=("Segoe UI", 11)
+    )
+    return lbl
+def close_button(parent):
+    b = tk.Button(
+        parent,
+        text="← BACK",
+        command=desktop,
+        bg=BG,
+        fg=MUTED,
+        activebackground=BG,
+        activeforeground=TEXT,
+        relief="flat",
+        bd=0,
+        font=("Segoe UI", 10, "bold"),
+        cursor="hand2"
+    )
+    b.pack(anchor="w", padx=35, pady=(25, 0))
+    return b
+# ============================================================
+# BOOT SCREEN
+# ============================================================
+def boot_screen():
+    clear_screen()
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    logo = tk.Label(
+        frame,
+        text="YAZHINI.EXE",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 30, "bold")
+    )
+    logo.pack(pady=(0, 30))
+    boot_label = tk.Label(
+        frame,
+        text="",
+        bg=BG,
+        fg=TEXT,
+        justify="left",
+        font=("Consolas", 12),
+        width=55
+    )
+    boot_label.pack()
+    lines = [
+        "INITIALIZING PERSONAL SYSTEM...",
+        "",
+        "Loading birthday protocol...",
+        "Loading memories...",
+        "Loading tiny surprises...",
+        "Searching for Yazhini...",
+        "",
+        "USER FOUND.",
+        "",
+        "IDENTITY: YAZHINI",
+        "ACCESS LEVEL: SPECIAL",
+        "",
+        "SYSTEM READY."
+    ]
+    index = 0
+    def next_line():
+        nonlocal index
+        if index < len(lines):
+            current = boot_label.cget("text")
+            if current:
+                current += "\n"
+            current += lines[index]
+            boot_label.config(text=current)
+            index += 1
+            root.after(170, next_line)
+        else:
+            root.after(900, desktop)
+    next_line()
+# ============================================================
+# DESKTOP
+# ============================================================
+def desktop():
+    clear_screen()
+    canvas = tk.Canvas(
+        root,
+        bg=BG,
+        highlightthickness=0
+    )
+    canvas.pack(fill="both", expand=True)
+    random.seed(7)
+    for _ in range(180):
+        x = random.randint(0, SCREEN_W)
+        y = random.randint(0, SCREEN_H)
+        size = random.choice([1, 1, 1, 2])
+        canvas.create_oval(
+            x,
+            y,
+            x + size,
+            y + size,
+            fill=random.choice([
+                "#171C2A",
+                "#1C2232",
+                "#20263A",
+                "#242B40"
+            ]),
+            outline=""
+        )
+    canvas.create_rectangle(
+        0,
+        0,
+        SCREEN_W,
+        55,
+        fill=PANEL,
+        outline=""
+    )
+    canvas.create_text(
+        25,
+        28,
+        text="YAZHINI.EXE",
+        fill=ACCENT,
+        font=("Consolas", 12, "bold"),
+        anchor="w"
+    )
+    canvas.create_text(
+        SCREEN_W // 2,
+        28,
+        text="PERSONAL SYSTEM",
+        fill=MUTED,
+        font=("Consolas", 10),
+        anchor="center"
+    )
+    canvas.create_text(
+        SCREEN_W - 25,
+        28,
+        text="● SYSTEM ONLINE",
+        fill=GREEN,
+        font=("Consolas", 10, "bold"),
+        anchor="e"
+    )
+    canvas.create_text(
+        SCREEN_W // 2,
+        110,
+        text="WELCOME, YAZHINI.",
+        fill=TEXT,
+        font=("Segoe UI", 26, "bold")
+    )
+    canvas.create_text(
+        SCREEN_W // 2,
+        145,
+        text="There are a few things hidden around here.",
+        fill=MUTED,
+        font=("Segoe UI", 11)
+    )
+    apps = [
+        ("🎂", "BIRTHDAY", birthday),
+        ("👤", "ABOUT", about),
+        ("🎓", "NEXT DESTINATION", next_destination),
+        ("🎮", "BIRTHDAY GAME", birthday_game),
+        ("⭐", "LITTLE THINGS", little_things),
+        ("🔒", "SECRET", secret),
+        ("💌", "MESSAGE", final_message)
+    ]
+    start_y = 205
+    positions = [
+        (SCREEN_W // 2 - 270, start_y),
+        (SCREEN_W // 2, start_y),
+        (SCREEN_W // 2 + 270, start_y),
+        (SCREEN_W // 2 - 270, start_y + 145),
+        (SCREEN_W // 2, start_y + 145),
+        (SCREEN_W // 2 + 270, start_y + 145),
+        (SCREEN_W // 2, start_y + 290)
+    ]
+    for (icon, name, command), (x, y) in zip(apps, positions):
+        card = tk.Frame(
+            root,
+            bg=PANEL,
+            width=220,
+            height=115,
+            highlightthickness=1,
+            highlightbackground="#1C2335"
+        )
+        # Keep every desktop card exactly the same size
+        card.pack_propagate(False)
+        card.place(
+            x=x - 110,
+            y=y
+        )
+        icon_label = tk.Label(
+            card,
+            text=icon,
+            bg=PANEL,
+            fg=TEXT,
+            font=("Segoe UI Emoji", 23)
+        )
+        icon_label.pack(pady=(13, 3))
+        text_label = tk.Label(
+            card,
+            text=name,
+            bg=PANEL,
+            fg=TEXT,
+            font=("Segoe UI", 10, "bold")
+        )
+        text_label.pack()
+        def click(event, cmd=command):
+            cmd()
+        def hover_in(event, c=card, i=icon_label, t=text_label):
+            c.config(
+                bg=PANEL_2,
+                highlightbackground=ACCENT
+            )
+            i.config(bg=PANEL_2)
+            t.config(bg=PANEL_2, fg=ACCENT)
+        def hover_out(event, c=card, i=icon_label, t=text_label):
+            c.config(
+                bg=PANEL,
+                highlightbackground="#1C2335"
+            )
+            i.config(bg=PANEL)
+            t.config(bg=PANEL, fg=TEXT)
+        for widget in [card, icon_label, text_label]:
+            widget.bind("<Button-1>", click)
+            widget.bind("<Enter>", hover_in)
+            widget.bind("<Leave>", hover_out)
+    canvas.create_text(
+        SCREEN_W // 2,
+        SCREEN_H - 30,
+        text="ESC  •  EXIT SYSTEM",
+        fill="#3B435A",
+        font=("Consolas", 9)
+    )
+# ============================================================
+# BIRTHDAY
+# ============================================================
+def birthday():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    lbl = tk.Label(
+        frame,
+        text="",
+        bg=BG,
+        fg=PINK,
+        font=("Segoe UI", 38, "bold")
+    )
+    lbl.pack(pady=20)
+    message = tk.Label(
+        frame,
+        text="",
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI", 14),
+        justify="center"
+    )
+    message.pack(pady=15)
+    type_text(
+        lbl,
+        "HAPPY BIRTHDAY, YAZHINI 🎂",
+        45
+    )
+    message.config(
+        text="\n".join([
+            "",
+            "Today, the system has one very important task.",
+            "",
+            "Make sure Yazhini has a good birthday. ✨",
+            "",
+            "SYSTEM PRIORITY: 100%"
+        ])
+    )
+# ============================================================
+# ABOUT
+# ============================================================
+def about():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    title(frame, "ABOUT THE USER").pack(pady=(10, 20))
+    tk.Label(
+        frame,
+        text="YAZHINI",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 25, "bold")
+    ).pack()
+    tk.Label(
+        frame,
+        text="",
+        bg=BG
+    ).pack()
+    info = [
+        "STATUS       : SPECIAL",
+        "ROLE         : SENIOR",
+        "CURRENT TASK : UNIVERSITY",
+        "LOCATION     : SOMEWHERE NEW",
+        "",
+        "PERSONALITY SCAN...",
+        "",
+        "→ Interesting",
+        "→ Probably dangerous when bored",
+        "→ Definitely birthday-worthy",
+        "",
+        "SCAN COMPLETE."
+    ]
+    tk.Label(
+        frame,
+        text="\n".join(info),
+        bg=BG,
+        fg=TEXT,
+        justify="left",
+        font=("Consolas", 12)
+    ).pack(pady=15)
+# ============================================================
+# NEXT DESTINATION
+# ============================================================
+def next_destination():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    title(frame, "NEXT DESTINATION").pack(pady=(10, 10))
+    subtitle(
+        frame,
+        "A new chapter is loading..."
+    ).pack(pady=(0, 25))
+    tk.Label(
+        frame,
+        text="🏠",
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI Emoji", 42)
+    ).pack()
+    tk.Label(
+        frame,
+        text="HOME",
+        bg=BG,
+        fg=ACCENT_2,
+        font=("Consolas", 20, "bold")
+    ).pack(pady=(5, 8))
+    tk.Label(
+        frame,
+        text="│",
+        bg=BG,
+        fg=MUTED,
+        font=("Consolas", 16)
+    ).pack()
+    tk.Label(
+        frame,
+        text="424 KM",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 26, "bold")
+    ).pack(pady=5)
+    tk.Label(
+        frame,
+        text="from home to a new beginning.",
+        bg=BG,
+        fg=MUTED,
+        font=("Segoe UI", 10, "italic")
+    ).pack(pady=(0, 8))
+    tk.Label(
+        frame,
+        text="│",
+        bg=BG,
+        fg=MUTED,
+        font=("Consolas", 16)
+    ).pack()
+    tk.Label(
+        frame,
+        text="🎓",
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI Emoji", 42)
+    ).pack()
+    tk.Label(
+        frame,
+        text="UNIVERSITY",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 20, "bold")
+    ).pack(pady=(5, 18))
+    message = (
+        "424 km is a long way from home.\n\n"
+        "New places might feel strange at first.\n"
+        "You might miss the people you're used to seeing every day.\n\n"
+        "But home doesn't become farther just because the distance gets bigger.\n\n"
+        "And wherever this new chapter takes you,\n"
+        "I hope you always have reasons to smile.\n\n"
+        "You've got this, senior. 🎓"
+    )
+    tk.Label(
+        frame,
+        text=message,
+        bg=BG,
+        fg=TEXT,
+        justify="center",
+        font=("Segoe UI", 12),
+        wraplength=750
+    ).pack(pady=10)
+    tk.Label(
+        frame,
+        text="SYSTEM MESSAGE: GOOD LUCK, SENIOR. ✨",
+        bg=BG,
+        fg=ACCENT_2,
+        font=("Consolas", 11, "bold")
+    ).pack(pady=12)
+# ============================================================
+# BIRTHDAY GAME
+# ============================================================
+def birthday_game():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    question = tk.Label(
+        frame,
+        text="Do you like chocolate? 🍫",
+        bg=BG,
+        fg=TEXT,
+        font=("Segoe UI", 24, "bold")
+    )
+    question.pack(pady=35)
+    status = tk.Label(
+        frame,
+        text="",
+        bg=BG,
+        fg=MUTED,
+        font=("Segoe UI", 11)
+    )
+    status.pack(pady=10)
+    buttons_frame = tk.Frame(frame, bg=BG)
+    buttons_frame.pack(pady=20)
+    # --------------------------------------------------------
+    # CHOCOLATE QUESTION
+    # --------------------------------------------------------
+    def yes_first():
+        question.config(
+            text="Do you like me?",
+            fg=PINK
+        )
+        status.config(
+            text="Please answer honestly."
+        )
+        for widget in buttons_frame.winfo_children():
+            widget.destroy()
+        yes = button(
+            buttons_frame,
+            "YES 👀",
+            yes_answer,
+            15
+        )
+        no = button(
+            buttons_frame,
+            "NO 😂",
+            no_answer,
+            15
+        )
+        yes.grid(row=0, column=0, padx=10)
+        no.grid(row=0, column=1, padx=10)
+    def yes_answer():
+        question.config(
+            text="Well... that wasn't expected. 👀",
+            fg=GREEN
+        )
+        status.config(
+            text="SYSTEM HAS SUCCESSFULLY RECORDED YOUR ANSWER."
+        )
+        for widget in buttons_frame.winfo_children():
+            widget.destroy()
+    def no_answer():
+        question.config(
+            text="The system has recorded your answer. 😂",
+            fg=TEXT
+        )
+        status.config(
+            text="No awkwardness detected."
+        )
+        for widget in buttons_frame.winfo_children():
+            widget.destroy()
+    yes = button(
+        buttons_frame,
+        "YES 🍫",
+        yes_first,
+        15
+    )
+    no = button(
+        buttons_frame,
+        "NO",
+        yes_first,
+        15
+    )
+    yes.grid(row=0, column=0, padx=10)
+    no.grid(row=0, column=1, padx=10)
+# ============================================================
+# LITTLE THINGS
+# MULTILINGUAL HIDDEN MESSAGE MAP
+# ============================================================
+def little_things():
+    clear_screen()
+    canvas = tk.Canvas(
+        root,
+        bg=BG,
+        highlightthickness=0
+    )
+    canvas.pack(fill="both", expand=True)
+    canvas.create_text(
+        SCREEN_W // 2,
+        35,
+        text="LITTLE THINGS",
+        fill=TEXT,
+        font=("Segoe UI", 20, "bold")
+    )
+    canvas.create_text(
+        SCREEN_W // 2,
+        65,
+        text="Some things are easier to find than others.",
+        fill=MUTED,
+        font=("Segoe UI", 10)
+    )
+    tk.Button(
+        root,
+        text="← BACK",
+        command=desktop,
+        bg=PANEL,
+        fg=MUTED,
+        relief="flat",
+        bd=0,
+        cursor="hand2"
+    ).place(
+        x=25,
+        y=25
+    )
+    # Background stars
+    for _ in range(250):
+        x = random.randint(0, SCREEN_W)
+        y = random.randint(90, SCREEN_H)
+        s = random.choice([1, 1, 2])
+        canvas.create_oval(
+            x,
+            y,
+            x + s,
+            y + s,
+            fill=random.choice([
+                "#111827",
+                "#182033",
+                "#222A3A"
+            ]),
+            outline=""
+        )
+    # --------------------------------------------------------
+    # POSITIVE HIDDEN MESSAGES
+    # --------------------------------------------------------
+    messages = [
+        ("ありがとう", "THANK YOU."),
+        ("Bonne chance", "GOOD LUCK."),
+        ("Sigue adelante", "KEEP GOING."),
+        ("Viel Glück", "YOU'VE GOT THIS."),
+        ("Будь счастлива", "STAY HAPPY."),
+        ("我相信你", "I BELIEVE IN YOU."),
+        ("넌 잘할 거야", "YOU'LL DO GREAT."),
+        ("Boa sorte", "GOOD THINGS AHEAD."),
+        ("Coraggio", "BE BRAVE."),
+        ("بالتوفيق", "BEST OF LUCK."),
+        ("शुभकामनाएँ", "BEST WISHES."),
+        ("Kaya mo 'yan", "YOU CAN DO THIS."),
+        ("Semoga berjaya", "KEEP SHINING."),
+        ("வெற்றி பெறுவாய்", "YOU'LL SUCCEED."),
+        ("சிரிச்சுட்டே இரு", "KEEP SMILING."),
+        ("சும்மா கலக்கு", "GO SHINE."),
+        ("สู้ๆ", "KEEP GOING."),
+        ("Καλή τύχη", "GOOD LUCK."),
+        ("Blijf stralen", "KEEP SHINING."),
+        ("Lycka till", "GOOD THINGS AHEAD."),
+        ("Noroc", "NEW BEGINNINGS."),
+        ("Powodzenia", "DON'T GIVE UP."),
+        ("Hakuna Matata", "STAY CALM."),
+        ("Namaste", "STAY KIND."),
+        ("سلام", "PEACE."),
+        ("Aloha", "ENJOY THE JOURNEY."),
+        ("Mi ŝatas la vivon", "ENJOY LIFE."),
+        ("Be Brave", "BE BRAVE."),
+        ("Respira", "BREATHE."),
+        ("Courage", "KEEP MOVING."),
+        ("Avanti", "MOVE FORWARD."),
+        ("Lumina", "KEEP GLOWING."),
+        ("Espero", "HOLD ONTO HOPE."),
+        ("新しい始まり", "NEW BEGINNINGS."),
+        ("未来へ", "TOWARDS TOMORROW."),
+        ("Believe", "BELIEVE."),
+        ("Smile", "KEEP SMILING."),
+        ("Dream", "DREAM BIG."),
+        ("Hope", "STAY HOPEFUL."),
+        ("Rise", "RISE HIGH."),
+        ("Keep Going", "KEEP GOING."),
+        ("You Matter", "YOU MATTER."),
+        ("Stay Curious", "STAY CURIOUS."),
+        ("One Step", "ONE STEP AT A TIME."),
+        ("Keep Learning", "KEEP LEARNING."),
+        ("Enjoy Today", "ENJOY TODAY."),
+        ("Stay Strong", "STAY STRONG."),
+        ("Stay Kind", "STAY KIND."),
+        ("Keep Creating", "KEEP CREATING."),
+        ("You're Enough", "YOU'RE ENOUGH."),
+        ("Good Energy", "GOOD ENERGY.")
+    ]
+    placed = []
+    def valid(x, y):
+        for px, py in placed:
+            if abs(x - px) < 130 and abs(y - py) < 55:
+                return False
+        return True
+    # --------------------------------------------------------
+    # PLACE HIDDEN MESSAGES
+    # --------------------------------------------------------
+    for foreign, english in messages:
+        for _ in range(300):
+            x = random.randint(
+                50,
+                SCREEN_W - 50
+            )
+            y = random.randint(
+                100,
+                SCREEN_H - 70
+            )
+            if valid(x, y):
+                break
+        placed.append((x, y))
+        item = canvas.create_text(
+            x,
+            y,
+            text=foreign,
+            fill="#171C2A",
+            font=("Segoe UI", random.choice([9, 10, 11]))
+        )
+        def reveal(event, it=item, msg=english):
+            canvas.itemconfig(
+                it,
+                text=msg,
+                fill=ACCENT_2,
+                font=("Segoe UI", 11, "bold")
+            )
+        canvas.tag_bind(
+            item,
+            "<Enter>",
+            reveal
+        )
+    # --------------------------------------------------------
+    # SECRET DEVELOPER EASTER EGG
+    # --------------------------------------------------------
+    morse = (
+        "- .... . / -.. . ...- . .-.. --- .--. . .-. / "
+        ".... --- .--. . ... / - .... .. ... / -- .- -.. . / "
+        "-.-- --- ..- / ... -- .. .-.. ."
+    )
+    dev = canvas.create_text(
+        SCREEN_W - 165,
+        SCREEN_H - 55,
+        text=morse,
+        fill="#101520",
+        font=("Consolas", 7)
+    )
+    def reveal_dev(event):
+        canvas.itemconfig(
+            dev,
+            text="The developer hopes this made you smile. :)",
+            fill=PINK,
+            font=("Segoe UI", 9, "italic")
+        )
+    canvas.tag_bind(
+        dev,
+        "<Enter>",
+        reveal_dev
+    )
+    # --------------------------------------------------------
+    # INSTRUCTION
+    # --------------------------------------------------------
+    canvas.create_text(
+        SCREEN_W // 2,
+        SCREEN_H - 25,
+        text="Move your mouse slowly... there may be things you haven't seen yet.",
+        fill="#394257",
+        font=("Segoe UI", 9)
+    )
+# ============================================================
+# SECRET
+# ============================================================
+def secret():
+    password_window = tk.Toplevel(root)
+    password_window.title("ACCESS REQUIRED")
+    password_window.configure(bg=BG)
+    password_window.geometry("440x330")
+    password_window.resizable(False, False)
+    password_window.update_idletasks()
+    x = (
+        password_window.winfo_screenwidth() // 2
+    ) - 220
+    y = (
+        password_window.winfo_screenheight() // 2
+    ) - 165
+    password_window.geometry(
+        f"440x330+{x}+{y}"
+    )
+    tk.Label(
+        password_window,
+        text="🔒 SECRET FILE",
+        bg=BG,
+        fg=ACCENT,
+        font=("Segoe UI", 22, "bold")
+    ).pack(pady=(30, 15))
+    tk.Label(
+        password_window,
+        text="THIS FILE REQUIRES AUTHORIZATION.",
+        bg=BG,
+        fg=TEXT,
+        font=("Consolas", 10)
+    ).pack(pady=5)
+    tk.Label(
+        password_window,
+        text="Hint: The name of the person this system was created for.",
+        bg=BG,
+        fg=MUTED,
+        font=("Segoe UI", 9),
+        wraplength=350
+    ).pack(pady=(10, 20))
+    entry = tk.Entry(
+        password_window,
+        bg=PANEL_2,
+        fg=TEXT,
+        insertbackground=TEXT,
+        relief="flat",
+        justify="center",
+        font=("Consolas", 13),
+        width=25
+    )
+    entry.pack(ipady=8)
+    entry.focus_set()
+    status = tk.Label(
+        password_window,
+        text="",
+        bg=BG,
+        fg=RED,
+        font=("Segoe UI", 9)
+    )
+    status.pack(pady=10)
+    # --------------------------------------------------------
+    # PASSWORD
+    # --------------------------------------------------------
+    def unlock():
+        password = entry.get().strip().upper()
+        if password == "YAZHUMAA":
+            status.config(
+                text="ACCESS GRANTED.",
+                fg=GREEN
+            )
+            password_window.update()
+            password_window.after(
+                700,
+                lambda: [
+                    password_window.destroy(),
+                    secret_file()
+                ]
+            )
+        else:
+            status.config(
+                text="ACCESS DENIED. Try again. 👀",
+                fg=RED
+            )
+            entry.delete(
+                0,
+                tk.END
+            )
+    unlock_button = button(
+        password_window,
+        "UNLOCK",
+        unlock,
+        15
+    )
+    unlock_button.pack(pady=5)
+    password_window.bind(
+        "<Return>",
+        lambda event: unlock()
+    )
+# ============================================================
+# SECRET FILE
+# ============================================================
+def secret_file():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    tk.Label(
+        frame,
+        text="YAZHINI.txt",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 24, "bold")
+    ).pack(pady=(0, 30))
+    content = (
+        "We haven't known each other for very long.\n\n"
+        "But somehow, you're still someone\n"
+        "I wanted to make something for.\n\n"
+        "Happy Birthday, Yazhini. :)\n"
+    )
+    tk.Label(
+        frame,
+        text=content,
+        bg=BG,
+        fg=TEXT,
+        justify="center",
+        font=("Segoe UI", 14),
+        wraplength=650
+    ).pack(pady=15)
+    tk.Label(
+        frame,
+        text="FILE STATUS: UNLOCKED",
+        bg=BG,
+        fg=GREEN,
+        font=("Consolas", 10, "bold")
+    ).pack(pady=25)
+# ============================================================
+# FINAL MESSAGE
+# ============================================================
+def final_message():
+    clear_screen()
+    close_button(root)
+    frame = tk.Frame(root, bg=BG)
+    frame.pack(expand=True)
+    tk.Label(
+        frame,
+        text="SYSTEM MESSAGE",
+        bg=BG,
+        fg=ACCENT,
+        font=("Consolas", 14, "bold")
+    ).pack(pady=(0, 20))
+    message = (
+        "You probably expected a birthday wish.\n\n"
+        "Instead, you got a whole unnecessary computer program. 😂\n\n"
+        "But honestly...\n"
+        "Happy Birthday, Yazhini.\n\n"
+        "I hope university brings you good people,\n"
+        "good experiences, and plenty of reasons to smile.\n\n"
+        "Take care, senior. 🎓"
+    )
+    tk.Label(
+        frame,
+        text=message,
+        bg=BG,
+        fg=TEXT,
+        justify="center",
+        font=("Segoe UI", 14),
+        wraplength=750
+    ).pack()
+    tk.Label(
+        frame,
+        text="— YAZHINI.EXE",
+        bg=BG,
+        fg=PINK,
+        font=("Consolas", 11, "bold")
+    ).pack(pady=30)
+# ============================================================
+# ESCAPE TO EXIT FULLSCREEN
+# ============================================================
+def exit_fullscreen(event=None):
+    try:
+        root.attributes("-fullscreen", False)
+    except:
+        pass
+    root.destroy()
+root.bind("<Escape>", exit_fullscreen)
+# ============================================================
+# START
+# ============================================================
+boot_screen()
+root.mainloop()
