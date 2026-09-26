@@ -1,1933 +1,1734 @@
-import tkinter as tk
-import random
-import time
-import pygame
-import os
-# ============================================================
-# YAZHINI.EXE
-# Interactive Birthday Experience
-# ============================================================
-# ---------------- COLORS ----------------
-BG = "#080A12"
-PANEL = "#101522"
-PANEL_2 = "#151B2B"
-TEXT = "#F2F4FF"
-MUTED = "#7E879F"
-ACCENT = "#8B7CFF"
-ACCENT_2 = "#45E0C4"
-PINK = "#FF6FAE"
-RED = "#FF5577"
-GREEN = "#61E294"
-YELLOW = "#FFD166"
-# ---------------- MAIN WINDOW ----------------
-root = tk.Tk()
-root.title("YAZHINI.EXE")
-root.configure(bg=BG)
-try:
-    root.attributes("-fullscreen", True)
-except:
-    root.geometry("1200x750")
-root.update_idletasks()
-SCREEN_W = root.winfo_screenwidth()
-SCREEN_H = root.winfo_screenheight()
-# ============================================================
-# MUSIC
-# ============================================================
-pygame.mixer.init()
-music_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "First-Sight.mp3.mpeg"
-)
-pygame.mixer.music.load(music_path)
-pygame.mixer.music.set_volume(1.0)
-pygame.mixer.music.play(-1)
-# ============================================================
-# GENERAL UTILITIES
-# ============================================================
-def clear_screen():
-    for widget in root.winfo_children():
-        widget.destroy()
-def type_text(label, text, delay=25, callback=None):
-    label.config(text="")
-    def write(i=0):
-        if i < len(text):
-            label.config(text=text[:i + 1])
-            root.after(delay, lambda: write(i + 1))
-        else:
-            if callback:
-                callback()
-    write()
-def button(parent, text, command, width=22):
-    b = tk.Button(
-        parent,
-        text=text,
-        command=command,
-        width=width,
-        height=2,
-        bg=PANEL_2,
-        fg=TEXT,
-        activebackground=ACCENT,
-        activeforeground="white",
-        relief="flat",
-        bd=0,
-        font=("Segoe UI", 11, "bold"),
-        cursor="hand2"
-    )
-    def enter(event):
-        b.config(bg=ACCENT)
-    def leave(event):
-        b.config(bg=PANEL_2)
-    b.bind("<Enter>", enter)
-    b.bind("<Leave>", leave)
-    return b
-def title(parent, text):
-    lbl = tk.Label(
-        parent,
-        text=text,
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI", 25, "bold")
-    )
-    return lbl
-def subtitle(parent, text):
-    lbl = tk.Label(
-        parent,
-        text=text,
-        bg=BG,
-        fg=MUTED,
-        font=("Segoe UI", 11)
-    )
-    return lbl
-def close_button(parent):
-    b = tk.Button(
-        parent,
-        text="← BACK",
-        command=desktop,
-        bg=BG,
-        fg=MUTED,
-        activebackground=BG,
-        activeforeground=TEXT,
-        relief="flat",
-        bd=0,
-        font=("Segoe UI", 10, "bold"),
-        cursor="hand2"
-    )
-    b.pack(anchor="w", padx=35, pady=(25, 0))
-    return b
-# ============================================================
-# BOOT SCREEN
-# ============================================================
-def boot_screen():
-    clear_screen()
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    logo = tk.Label(
-        frame,
-        text="YAZHINI.EXE",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 30, "bold")
-    )
-    logo.pack(pady=(0, 30))
-    boot_label = tk.Label(
-        frame,
-        text="",
-        bg=BG,
-        fg=TEXT,
-        justify="left",
-        font=("Consolas", 12),
-        width=55
-    )
-    boot_label.pack()
-    lines = [
-        "INITIALIZING PERSONAL SYSTEM...",
-        "",
-        "Loading birthday protocol...",
-        "Loading memories...",
-        "Loading tiny surprises...",
-        "Searching for Yazhini...",
-        "",
-        "USER FOUND.",
-        "",
-        "IDENTITY: YAZHINI",
-        "ACCESS LEVEL: SPECIAL",
-        "",
-        "SYSTEM READY."
-    ]
-    index = 0
-    def next_line():
-        nonlocal index
-        if index < len(lines):
-            current = boot_label.cget("text")
-            if current:
-                current += "\n"
-            current += lines[index]
-            boot_label.config(text=current)
-            index += 1
-            root.after(170, next_line)
-        else:
-            root.after(900, desktop)
-    next_line()
-# ============================================================
-# DESKTOP
-# ============================================================
-def desktop():
-    clear_screen()
-    canvas = tk.Canvas(
-        root,
-        bg=BG,
-        highlightthickness=0
-    )
-    canvas.pack(fill="both", expand=True)
-    random.seed(7)
-    for _ in range(180):
-        x = random.randint(0, SCREEN_W)
-        y = random.randint(0, SCREEN_H)
-        size = random.choice([1, 1, 1, 2])
-        canvas.create_oval(
-            x,
-            y,
-            x + size,
-            y + size,
-            fill=random.choice([
-                "#171C2A",
-                "#1C2232",
-                "#20263A",
-                "#242B40"
-            ]),
-            outline=""
-        )
-    canvas.create_rectangle(
-        0,
-        0,
-        SCREEN_W,
-        55,
-        fill=PANEL,
-        outline=""
-    )
-    canvas.create_text(
-        25,
-        28,
-        text="YAZHINI.EXE",
-        fill=ACCENT,
-        font=("Consolas", 12, "bold"),
-        anchor="w"
-    )
-    canvas.create_text(
-        SCREEN_W // 2,
-        28,
-        text="PERSONAL SYSTEM",
-        fill=MUTED,
-        font=("Consolas", 10),
-        anchor="center"
-    )
-    canvas.create_text(
-        SCREEN_W - 25,
-        28,
-        text="● SYSTEM ONLINE",
-        fill=GREEN,
-        font=("Consolas", 10, "bold"),
-        anchor="e"
-    )
-    canvas.create_text(
-        SCREEN_W // 2,
-        110,
-        text="WELCOME, YAZHINI.",
-        fill=TEXT,
-        font=("Segoe UI", 26, "bold")
-    )
-    canvas.create_text(
-        SCREEN_W // 2,
-        145,
-        text="There are a few things hidden around here.",
-        fill=MUTED,
-        font=("Segoe UI", 11)
-    )
-    apps = [
-        ("🎂", "BIRTHDAY", birthday),
-        ("👤", "ABOUT", about),
-        ("🎓", "NEXT DESTINATION", next_destination),
-        ("🎮", "BIRTHDAY GAME", birthday_game),
-        ("⭐", "LITTLE THINGS", little_things),
-        ("🔒", "SECRET", secret),
-        ("💌", "MESSAGE", final_message)
-    ]
-    start_y = 205
-    positions = [
-        (SCREEN_W // 2 - 270, start_y),
-        (SCREEN_W // 2, start_y),
-        (SCREEN_W // 2 + 270, start_y),
-        (SCREEN_W // 2 - 270, start_y + 145),
-        (SCREEN_W // 2, start_y + 145),
-        (SCREEN_W // 2 + 270, start_y + 145),
-        (SCREEN_W // 2, start_y + 290)
-    ]
-    for (icon, name, command), (x, y) in zip(apps, positions):
-        card = tk.Frame(
-            root,
-            bg=PANEL,
-            width=220,
-            height=115,
-            highlightthickness=1,
-            highlightbackground="#1C2335"
-        )
-        # Keep every desktop card exactly the same size
-        card.pack_propagate(False)
-        card.place(
-            x=x - 110,
-            y=y
-        )
-        icon_label = tk.Label(
-            card,
-            text=icon,
-            bg=PANEL,
-            fg=TEXT,
-            font=("Segoe UI Emoji", 23)
-        )
-        icon_label.pack(pady=(13, 3))
-        text_label = tk.Label(
-            card,
-            text=name,
-            bg=PANEL,
-            fg=TEXT,
-            font=("Segoe UI", 10, "bold")
-        )
-        text_label.pack()
-        def click(event, cmd=command):
-            cmd()
-        def hover_in(event, c=card, i=icon_label, t=text_label):
-            c.config(
-                bg=PANEL_2,
-                highlightbackground=ACCENT
-            )
-            i.config(bg=PANEL_2)
-            t.config(bg=PANEL_2, fg=ACCENT)
-        def hover_out(event, c=card, i=icon_label, t=text_label):
-            c.config(
-                bg=PANEL,
-                highlightbackground="#1C2335"
-            )
-            i.config(bg=PANEL)
-            t.config(bg=PANEL, fg=TEXT)
-        for widget in [card, icon_label, text_label]:
-            widget.bind("<Button-1>", click)
-            widget.bind("<Enter>", hover_in)
-            widget.bind("<Leave>", hover_out)
-    canvas.create_text(
-        SCREEN_W // 2,
-        SCREEN_H - 30,
-        text="ESC  •  EXIT SYSTEM",
-        fill="#3B435A",
-        font=("Consolas", 9)
-    )
-# ============================================================
-# BIRTHDAY
-# ============================================================
-def birthday():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    lbl = tk.Label(
-        frame,
-        text="",
-        bg=BG,
-        fg=PINK,
-        font=("Segoe UI", 38, "bold")
-    )
-    lbl.pack(pady=20)
-    message = tk.Label(
-        frame,
-        text="",
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI", 14),
-        justify="center"
-    )
-    message.pack(pady=15)
-    type_text(
-        lbl,
-        "HAPPY BIRTHDAY, YAZHINI 🎂",
-        45
-    )
-    message.config(
-        text="\n".join([
-            "",
-            "Today, the system has one very important task.",
-            "",
-            "Make sure Yazhini has a good birthday. ✨",
-            "",
-            "SYSTEM PRIORITY: 100%"
-        ])
-    )
-# ============================================================
-# ABOUT
-# ============================================================
-def about():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    title(frame, "ABOUT THE USER").pack(pady=(10, 20))
-    tk.Label(
-        frame,
-        text="YAZHINI",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 25, "bold")
-    ).pack()
-    tk.Label(
-        frame,
-        text="",
-        bg=BG
-    ).pack()
-    info = [
-        "STATUS       : SPECIAL",
-        "ROLE         : SENIOR",
-        "CURRENT TASK : UNIVERSITY",
-        "LOCATION     : SOMEWHERE NEW",
-        "",
-        "PERSONALITY SCAN...",
-        "",
-        "→ Interesting",
-        "→ Probably dangerous when bored",
-        "→ Definitely birthday-worthy",
-        "",
-        "SCAN COMPLETE."
-    ]
-    tk.Label(
-        frame,
-        text="\n".join(info),
-        bg=BG,
-        fg=TEXT,
-        justify="left",
-        font=("Consolas", 12)
-    ).pack(pady=15)
-# ============================================================
-# NEXT DESTINATION
-# ============================================================
-def next_destination():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    title(frame, "NEXT DESTINATION").pack(pady=(10, 10))
-    subtitle(
-        frame,
-        "A new chapter is loading..."
-    ).pack(pady=(0, 25))
-    tk.Label(
-        frame,
-        text="🏠",
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI Emoji", 42)
-    ).pack()
-    tk.Label(
-        frame,
-        text="HOME",
-        bg=BG,
-        fg=ACCENT_2,
-        font=("Consolas", 20, "bold")
-    ).pack(pady=(5, 8))
-    tk.Label(
-        frame,
-        text="│",
-        bg=BG,
-        fg=MUTED,
-        font=("Consolas", 16)
-    ).pack()
-    tk.Label(
-        frame,
-        text="424 KM",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 26, "bold")
-    ).pack(pady=5)
-    tk.Label(
-        frame,
-        text="from home to a new beginning.",
-        bg=BG,
-        fg=MUTED,
-        font=("Segoe UI", 10, "italic")
-    ).pack(pady=(0, 8))
-    tk.Label(
-        frame,
-        text="│",
-        bg=BG,
-        fg=MUTED,
-        font=("Consolas", 16)
-    ).pack()
-    tk.Label(
-        frame,
-        text="🎓",
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI Emoji", 42)
-    ).pack()
-    tk.Label(
-        frame,
-        text="UNIVERSITY",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 20, "bold")
-    ).pack(pady=(5, 18))
-    message = (
-        "424 km is a long way from home.\n\n"
-        "New places might feel strange at first.\n"
-        "You might miss the people you're used to seeing every day.\n\n"
-        "But home doesn't become farther just because the distance gets bigger.\n\n"
-        "And wherever this new chapter takes you,\n"
-        "I hope you always have reasons to smile.\n\n"
-        "You've got this, senior. 🎓"
-    )
-    tk.Label(
-        frame,
-        text=message,
-        bg=BG,
-        fg=TEXT,
-        justify="center",
-        font=("Segoe UI", 12),
-        wraplength=750
-    ).pack(pady=10)
-    tk.Label(
-        frame,
-        text="SYSTEM MESSAGE: GOOD LUCK, SENIOR. ✨",
-        bg=BG,
-        fg=ACCENT_2,
-        font=("Consolas", 11, "bold")
-    ).pack(pady=12)
-# ============================================================
-# BIRTHDAY GAME
-# ============================================================
-def birthday_game():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    question = tk.Label(
-        frame,
-        text="Do you like chocolate? 🍫",
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI", 24, "bold")
-    )
-    question.pack(pady=35)
-    status = tk.Label(
-        frame,
-        text="",
-        bg=BG,
-        fg=MUTED,
-        font=("Segoe UI", 11)
-    )
-    status.pack(pady=10)
-    buttons_frame = tk.Frame(frame, bg=BG)
-    buttons_frame.pack(pady=20)
-    # --------------------------------------------------------
-    # CHOCOLATE QUESTION
-    # --------------------------------------------------------
-    def yes_first():
-        question.config(
-            text="Do you like me?",
-            fg=PINK
-        )
-        status.config(
-            text="Please answer honestly."
-        )
-        for widget in buttons_frame.winfo_children():
-            widget.destroy()
-        yes = button(
-            buttons_frame,
-            "YES 👀",
-            yes_answer,
-            15
-        )
-        no = button(
-            buttons_frame,
-            "NO 😂",
-            no_answer,
-            15
-        )
-        yes.grid(row=0, column=0, padx=10)
-        no.grid(row=0, column=1, padx=10)
-    def yes_answer():
-        question.config(
-            text="Well... that wasn't expected. 👀",
-            fg=GREEN
-        )
-        status.config(
-            text="SYSTEM HAS SUCCESSFULLY RECORDED YOUR ANSWER."
-        )
-        for widget in buttons_frame.winfo_children():
-            widget.destroy()
-    def no_answer():
-        question.config(
-            text="The system has recorded your answer. 😂",
-            fg=TEXT
-        )
-        status.config(
-            text="No awkwardness detected."
-        )
-        for widget in buttons_frame.winfo_children():
-            widget.destroy()
-    yes = button(
-        buttons_frame,
-        "YES 🍫",
-        yes_first,
-        15
-    )
-    no = button(
-        buttons_frame,
-        "NO",
-        yes_first,
-        15
-    )
-    yes.grid(row=0, column=0, padx=10)
-    no.grid(row=0, column=1, padx=10)
-# ============================================================
-# LITTLE THINGS
-# MULTILINGUAL HIDDEN MESSAGE MAP
-# ============================================================
-def little_things():
-    clear_screen()
-    canvas = tk.Canvas(
-        root,
-        bg=BG,
-        highlightthickness=0
-    )
-    canvas.pack(fill="both", expand=True)
-    canvas.create_text(
-        SCREEN_W // 2,
-        35,
-        text="LITTLE THINGS",
-        fill=TEXT,
-        font=("Segoe UI", 20, "bold")
-    )
-    canvas.create_text(
-        SCREEN_W // 2,
-        65,
-        text="Some things are easier to find than others.",
-        fill=MUTED,
-        font=("Segoe UI", 10)
-    )
-    tk.Button(
-        root,
-        text="← BACK",
-        command=desktop,
-        bg=PANEL,
-        fg=MUTED,
-        relief="flat",
-        bd=0,
-        cursor="hand2"
-    ).place(
-        x=25,
-        y=25
-    )
-    # Background stars
-    for _ in range(250):
-        x = random.randint(0, SCREEN_W)
-        y = random.randint(90, SCREEN_H)
-        s = random.choice([1, 1, 2])
-        canvas.create_oval(
-            x,
-            y,
-            x + s,
-            y + s,
-            fill=random.choice([
-                "#111827",
-                "#182033",
-                "#222A3A"
-            ]),
-            outline=""
-        )
-    # --------------------------------------------------------
-    # POSITIVE HIDDEN MESSAGES
-    # --------------------------------------------------------
-    messages = [
-        ("ありがとう", "THANK YOU."),
-        ("Bonne chance", "GOOD LUCK."),
-        ("Sigue adelante", "KEEP GOING."),
-        ("Viel Glück", "YOU'VE GOT THIS."),
-        ("Будь счастлива", "STAY HAPPY."),
-        ("我相信你", "I BELIEVE IN YOU."),
-        ("넌 잘할 거야", "YOU'LL DO GREAT."),
-        ("Boa sorte", "GOOD THINGS AHEAD."),
-        ("Coraggio", "BE BRAVE."),
-        ("بالتوفيق", "BEST OF LUCK."),
-        ("शुभकामनाएँ", "BEST WISHES."),
-        ("Kaya mo 'yan", "YOU CAN DO THIS."),
-        ("Semoga berjaya", "KEEP SHINING."),
-        ("வெற்றி பெறுவாய்", "YOU'LL SUCCEED."),
-        ("சிரிச்சுட்டே இரு", "KEEP SMILING."),
-        ("சும்மா கலக்கு", "GO SHINE."),
-        ("สู้ๆ", "KEEP GOING."),
-        ("Καλή τύχη", "GOOD LUCK."),
-        ("Blijf stralen", "KEEP SHINING."),
-        ("Lycka till", "GOOD THINGS AHEAD."),
-        ("Noroc", "NEW BEGINNINGS."),
-        ("Powodzenia", "DON'T GIVE UP."),
-        ("Hakuna Matata", "STAY CALM."),
-        ("Namaste", "STAY KIND."),
-        ("سلام", "PEACE."),
-        ("Aloha", "ENJOY THE JOURNEY."),
-        ("Mi ŝatas la vivon", "ENJOY LIFE."),
-        ("Be Brave", "BE BRAVE."),
-        ("Respira", "BREATHE."),
-        ("Courage", "KEEP MOVING."),
-        ("Avanti", "MOVE FORWARD."),
-        ("Lumina", "KEEP GLOWING."),
-        ("Espero", "HOLD ONTO HOPE."),
-        ("新しい始まり", "NEW BEGINNINGS."),
-        ("未来へ", "TOWARDS TOMORROW."),
-        ("Believe", "BELIEVE."),
-        ("Smile", "KEEP SMILING."),
-        ("Dream", "DREAM BIG."),
-        ("Hope", "STAY HOPEFUL."),
-        ("Rise", "RISE HIGH."),
-        ("Keep Going", "KEEP GOING."),
-        ("You Matter", "YOU MATTER."),
-        ("Stay Curious", "STAY CURIOUS."),
-        ("One Step", "ONE STEP AT A TIME."),
-        ("Keep Learning", "KEEP LEARNING."),
-        ("Enjoy Today", "ENJOY TODAY."),
-        ("Stay Strong", "STAY STRONG."),
-        ("Stay Kind", "STAY KIND."),
-        ("Keep Creating", "KEEP CREATING."),
-        ("You're Enough", "YOU'RE ENOUGH."),
-        ("Good Energy", "GOOD ENERGY.")
-    ]
-    placed = []
-    def valid(x, y):
-        for px, py in placed:
-            if abs(x - px) < 130 and abs(y - py) < 55:
-                return False
-        return True
-    # --------------------------------------------------------
-    # PLACE HIDDEN MESSAGES
-    # --------------------------------------------------------
-    for foreign, english in messages:
-        for _ in range(300):
-            x = random.randint(
-                50,
-                SCREEN_W - 50
-            )
-            y = random.randint(
-                100,
-                SCREEN_H - 70
-            )
-            if valid(x, y):
-                break
-        placed.append((x, y))
-        item = canvas.create_text(
-            x,
-            y,
-            text=foreign,
-            fill="#171C2A",
-            font=("Segoe UI", random.choice([9, 10, 11]))
-        )
-        def reveal(event, it=item, msg=english):
-            canvas.itemconfig(
-                it,
-                text=msg,
-                fill=ACCENT_2,
-                font=("Segoe UI", 11, "bold")
-            )
-        canvas.tag_bind(
-            item,
-            "<Enter>",
-            reveal
-        )
-    # --------------------------------------------------------
-    # SECRET DEVELOPER EASTER EGG
-    # --------------------------------------------------------
-    morse = (
-        "- .... . / -.. . ...- . .-.. --- .--. . .-. / "
-        ".... --- .--. . ... / - .... .. ... / -- .- -.. . / "
-        "-.-- --- ..- / ... -- .. .-.. ."
-    )
-    dev = canvas.create_text(
-        SCREEN_W - 165,
-        SCREEN_H - 55,
-        text=morse,
-        fill="#101520",
-        font=("Consolas", 7)
-    )
-    def reveal_dev(event):
-        canvas.itemconfig(
-            dev,
-            text="The developer hopes this made you smile. :)",
-            fill=PINK,
-            font=("Segoe UI", 9, "italic")
-        )
-    canvas.tag_bind(
-        dev,
-        "<Enter>",
-        reveal_dev
-    )
-    # --------------------------------------------------------
-    # INSTRUCTION
-    # --------------------------------------------------------
-    canvas.create_text(
-        SCREEN_W // 2,
-        SCREEN_H - 25,
-        text="Move your mouse slowly... there may be things you haven't seen yet.",
-        fill="#394257",
-        font=("Segoe UI", 9)
-    )
-# ============================================================
-# SECRET
-# ============================================================
-def secret():
-    password_window = tk.Toplevel(root)
-    password_window.title("ACCESS REQUIRED")
-    password_window.configure(bg=BG)
-    password_window.geometry("440x330")
-    password_window.resizable(False, False)
-    password_window.update_idletasks()
-    x = (
-        password_window.winfo_screenwidth() // 2
-    ) - 220
-    y = (
-        password_window.winfo_screenheight() // 2
-    ) - 165
-    password_window.geometry(
-        f"440x330+{x}+{y}"
-    )
-    tk.Label(
-        password_window,
-        text="🔒 SECRET FILE",
-        bg=BG,
-        fg=ACCENT,
-        font=("Segoe UI", 22, "bold")
-    ).pack(pady=(30, 15))
-    tk.Label(
-        password_window,
-        text="THIS FILE REQUIRES AUTHORIZATION.",
-        bg=BG,
-        fg=TEXT,
-        font=("Consolas", 10)
-    ).pack(pady=5)
-    tk.Label(
-        password_window,
-        text="Hint: The name of the person this system was created for.",
-        bg=BG,
-        fg=MUTED,
-        font=("Segoe UI", 9),
-        wraplength=350
-    ).pack(pady=(10, 20))
-    entry = tk.Entry(
-        password_window,
-        bg=PANEL_2,
-        fg=TEXT,
-        insertbackground=TEXT,
-        relief="flat",
-        justify="center",
-        font=("Consolas", 13),
-        width=25
-    )
-    entry.pack(ipady=8)
-    entry.focus_set()
-    status = tk.Label(
-        password_window,
-        text="",
-        bg=BG,
-        fg=RED,
-        font=("Segoe UI", 9)
-    )
-    status.pack(pady=10)
-    # --------------------------------------------------------
-    # PASSWORD
-    # --------------------------------------------------------
-    def unlock():
-        password = entry.get().strip().upper()
-        if password == "YAZHUMAA":
-            status.config(
-                text="ACCESS GRANTED.",
-                fg=GREEN
-            )
-            password_window.update()
-            password_window.after(
-                700,
-                lambda: [
-                    password_window.destroy(),
-                    secret_file()
-                ]
-            )
-        else:
-            status.config(
-                text="ACCESS DENIED. Try again. 👀",
-                fg=RED
-            )
-            entry.delete(
-                0,
-                tk.END
-            )
-    unlock_button = button(
-        password_window,
-        "UNLOCK",
-        unlock,
-        15
-    )
-    unlock_button.pack(pady=5)
-    password_window.bind(
-        "<Return>",
-        lambda event: unlock()
-    )
-# ============================================================
-# SECRET FILE
-# ============================================================
-def secret_file():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    tk.Label(
-        frame,
-        text="YAZHINI.txt",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 24, "bold")
-    ).pack(pady=(0, 30))
-    content = (
-        "We haven't known each other for very long.\n\n"
-        "But somehow, you're still someone\n"
-        "I wanted to make something for.\n\n"
-        "Happy Birthday, Yazhini. :)\n"
-    )
-    tk.Label(
-        frame,
-        text=content,
-        bg=BG,
-        fg=TEXT,
-        justify="center",
-        font=("Segoe UI", 14),
-        wraplength=650
-    ).pack(pady=15)
-    tk.Label(
-        frame,
-        text="FILE STATUS: UNLOCKED",
-        bg=BG,
-        fg=GREEN,
-        font=("Consolas", 10, "bold")
-    ).pack(pady=25)
-# ============================================================
-# FINAL MESSAGE
-# ============================================================
-def final_message():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    tk.Label(
-        frame,
-        text="SYSTEM MESSAGE",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 14, "bold")
-    ).pack(pady=(0, 20))
-    message = (
-        "You probably expected a birthday wish.\n\n"
-        "Instead, you got a whole unnecessary computer program. 😂\n\n"
-        "But honestly...\n"
-        "Happy Birthday, Yazhini.\n\n"
-        "I hope university brings you good people,\n"
-        "good experiences, and plenty of reasons to smile.\n\n"
-        "Take care, senior. 🎓"
-    )
-    tk.Label(
-        frame,
-        text=message,
-        bg=BG,
-        fg=TEXT,
-        justify="center",
-        font=("Segoe UI", 14),
-        wraplength=750
-    ).pack()
-    tk.Label(
-        frame,
-        text="— YAZHINI.EXE",
-        bg=BG,
-        fg=PINK,
-        font=("Consolas", 11, "bold")
-    ).pack(pady=30)
-# ============================================================
-# ESCAPE TO EXIT FULLSCREEN
-# ============================================================
-def exit_fullscreen(event=None):
-    try:
-        root.attributes("-fullscreen", False)
-    except:
-        pass
-    root.destroy()
-root.bind("<Escape>", exit_fullscreen)
-# ============================================================
-# START
-# ============================================================
-boot_screen()
-root.mainloop()import tkinter as tk
-import random
-import time
-import pygame
-import os
-# ============================================================
-# YAZHINI.EXE
-# Interactive Birthday Experience
-# ============================================================
-# ---------------- COLORS ----------------
-BG = "#080A12"
-PANEL = "#101522"
-PANEL_2 = "#151B2B"
-TEXT = "#F2F4FF"
-MUTED = "#7E879F"
-ACCENT = "#8B7CFF"
-ACCENT_2 = "#45E0C4"
-PINK = "#FF6FAE"
-RED = "#FF5577"
-GREEN = "#61E294"
-YELLOW = "#FFD166"
-# ---------------- MAIN WINDOW ----------------
-root = tk.Tk()
-root.title("YAZHINI.EXE")
-root.configure(bg=BG)
-try:
-    root.attributes("-fullscreen", True)
-except:
-    root.geometry("1200x750")
-root.update_idletasks()
-SCREEN_W = root.winfo_screenwidth()
-SCREEN_H = root.winfo_screenheight()
-# ============================================================
-# MUSIC
-# ============================================================
-pygame.mixer.init()
-music_path = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "First-Sight.mp3.mpeg"
-)
-pygame.mixer.music.load(music_path)
-pygame.mixer.music.set_volume(1.0)
-pygame.mixer.music.play(-1)
-# ============================================================
-# GENERAL UTILITIES
-# ============================================================
-def clear_screen():
-    for widget in root.winfo_children():
-        widget.destroy()
-def type_text(label, text, delay=25, callback=None):
-    label.config(text="")
-    def write(i=0):
-        if i < len(text):
-            label.config(text=text[:i + 1])
-            root.after(delay, lambda: write(i + 1))
-        else:
-            if callback:
-                callback()
-    write()
-def button(parent, text, command, width=22):
-    b = tk.Button(
-        parent,
-        text=text,
-        command=command,
-        width=width,
-        height=2,
-        bg=PANEL_2,
-        fg=TEXT,
-        activebackground=ACCENT,
-        activeforeground="white",
-        relief="flat",
-        bd=0,
-        font=("Segoe UI", 11, "bold"),
-        cursor="hand2"
-    )
-    def enter(event):
-        b.config(bg=ACCENT)
-    def leave(event):
-        b.config(bg=PANEL_2)
-    b.bind("<Enter>", enter)
-    b.bind("<Leave>", leave)
-    return b
-def title(parent, text):
-    lbl = tk.Label(
-        parent,
-        text=text,
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI", 25, "bold")
-    )
-    return lbl
-def subtitle(parent, text):
-    lbl = tk.Label(
-        parent,
-        text=text,
-        bg=BG,
-        fg=MUTED,
-        font=("Segoe UI", 11)
-    )
-    return lbl
-def close_button(parent):
-    b = tk.Button(
-        parent,
-        text="← BACK",
-        command=desktop,
-        bg=BG,
-        fg=MUTED,
-        activebackground=BG,
-        activeforeground=TEXT,
-        relief="flat",
-        bd=0,
-        font=("Segoe UI", 10, "bold"),
-        cursor="hand2"
-    )
-    b.pack(anchor="w", padx=35, pady=(25, 0))
-    return b
-# ============================================================
-# BOOT SCREEN
-# ============================================================
-def boot_screen():
-    clear_screen()
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    logo = tk.Label(
-        frame,
-        text="YAZHINI.EXE",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 30, "bold")
-    )
-    logo.pack(pady=(0, 30))
-    boot_label = tk.Label(
-        frame,
-        text="",
-        bg=BG,
-        fg=TEXT,
-        justify="left",
-        font=("Consolas", 12),
-        width=55
-    )
-    boot_label.pack()
-    lines = [
-        "INITIALIZING PERSONAL SYSTEM...",
-        "",
-        "Loading birthday protocol...",
-        "Loading memories...",
-        "Loading tiny surprises...",
-        "Searching for Yazhini...",
-        "",
-        "USER FOUND.",
-        "",
-        "IDENTITY: YAZHINI",
-        "ACCESS LEVEL: SPECIAL",
-        "",
-        "SYSTEM READY."
-    ]
-    index = 0
-    def next_line():
-        nonlocal index
-        if index < len(lines):
-            current = boot_label.cget("text")
-            if current:
-                current += "\n"
-            current += lines[index]
-            boot_label.config(text=current)
-            index += 1
-            root.after(170, next_line)
-        else:
-            root.after(900, desktop)
-    next_line()
-# ============================================================
-# DESKTOP
-# ============================================================
-def desktop():
-    clear_screen()
-    canvas = tk.Canvas(
-        root,
-        bg=BG,
-        highlightthickness=0
-    )
-    canvas.pack(fill="both", expand=True)
-    random.seed(7)
-    for _ in range(180):
-        x = random.randint(0, SCREEN_W)
-        y = random.randint(0, SCREEN_H)
-        size = random.choice([1, 1, 1, 2])
-        canvas.create_oval(
-            x,
-            y,
-            x + size,
-            y + size,
-            fill=random.choice([
-                "#171C2A",
-                "#1C2232",
-                "#20263A",
-                "#242B40"
-            ]),
-            outline=""
-        )
-    canvas.create_rectangle(
-        0,
-        0,
-        SCREEN_W,
-        55,
-        fill=PANEL,
-        outline=""
-    )
-    canvas.create_text(
-        25,
-        28,
-        text="YAZHINI.EXE",
-        fill=ACCENT,
-        font=("Consolas", 12, "bold"),
-        anchor="w"
-    )
-    canvas.create_text(
-        SCREEN_W // 2,
-        28,
-        text="PERSONAL SYSTEM",
-        fill=MUTED,
-        font=("Consolas", 10),
-        anchor="center"
-    )
-    canvas.create_text(
-        SCREEN_W - 25,
-        28,
-        text="● SYSTEM ONLINE",
-        fill=GREEN,
-        font=("Consolas", 10, "bold"),
-        anchor="e"
-    )
-    canvas.create_text(
-        SCREEN_W // 2,
-        110,
-        text="WELCOME, YAZHINI.",
-        fill=TEXT,
-        font=("Segoe UI", 26, "bold")
-    )
-    canvas.create_text(
-        SCREEN_W // 2,
-        145,
-        text="There are a few things hidden around here.",
-        fill=MUTED,
-        font=("Segoe UI", 11)
-    )
-    apps = [
-        ("🎂", "BIRTHDAY", birthday),
-        ("👤", "ABOUT", about),
-        ("🎓", "NEXT DESTINATION", next_destination),
-        ("🎮", "BIRTHDAY GAME", birthday_game),
-        ("⭐", "LITTLE THINGS", little_things),
-        ("🔒", "SECRET", secret),
-        ("💌", "MESSAGE", final_message)
-    ]
-    start_y = 205
-    positions = [
-        (SCREEN_W // 2 - 270, start_y),
-        (SCREEN_W // 2, start_y),
-        (SCREEN_W // 2 + 270, start_y),
-        (SCREEN_W // 2 - 270, start_y + 145),
-        (SCREEN_W // 2, start_y + 145),
-        (SCREEN_W // 2 + 270, start_y + 145),
-        (SCREEN_W // 2, start_y + 290)
-    ]
-    for (icon, name, command), (x, y) in zip(apps, positions):
-        card = tk.Frame(
-            root,
-            bg=PANEL,
-            width=220,
-            height=115,
-            highlightthickness=1,
-            highlightbackground="#1C2335"
-        )
-        # Keep every desktop card exactly the same size
-        card.pack_propagate(False)
-        card.place(
-            x=x - 110,
-            y=y
-        )
-        icon_label = tk.Label(
-            card,
-            text=icon,
-            bg=PANEL,
-            fg=TEXT,
-            font=("Segoe UI Emoji", 23)
-        )
-        icon_label.pack(pady=(13, 3))
-        text_label = tk.Label(
-            card,
-            text=name,
-            bg=PANEL,
-            fg=TEXT,
-            font=("Segoe UI", 10, "bold")
-        )
-        text_label.pack()
-        def click(event, cmd=command):
-            cmd()
-        def hover_in(event, c=card, i=icon_label, t=text_label):
-            c.config(
-                bg=PANEL_2,
-                highlightbackground=ACCENT
-            )
-            i.config(bg=PANEL_2)
-            t.config(bg=PANEL_2, fg=ACCENT)
-        def hover_out(event, c=card, i=icon_label, t=text_label):
-            c.config(
-                bg=PANEL,
-                highlightbackground="#1C2335"
-            )
-            i.config(bg=PANEL)
-            t.config(bg=PANEL, fg=TEXT)
-        for widget in [card, icon_label, text_label]:
-            widget.bind("<Button-1>", click)
-            widget.bind("<Enter>", hover_in)
-            widget.bind("<Leave>", hover_out)
-    canvas.create_text(
-        SCREEN_W // 2,
-        SCREEN_H - 30,
-        text="ESC  •  EXIT SYSTEM",
-        fill="#3B435A",
-        font=("Consolas", 9)
-    )
-# ============================================================
-# BIRTHDAY
-# ============================================================
-def birthday():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    lbl = tk.Label(
-        frame,
-        text="",
-        bg=BG,
-        fg=PINK,
-        font=("Segoe UI", 38, "bold")
-    )
-    lbl.pack(pady=20)
-    message = tk.Label(
-        frame,
-        text="",
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI", 14),
-        justify="center"
-    )
-    message.pack(pady=15)
-    type_text(
-        lbl,
-        "HAPPY BIRTHDAY, YAZHINI 🎂",
-        45
-    )
-    message.config(
-        text="\n".join([
-            "",
-            "Today, the system has one very important task.",
-            "",
-            "Make sure Yazhini has a good birthday. ✨",
-            "",
-            "SYSTEM PRIORITY: 100%"
-        ])
-    )
-# ============================================================
-# ABOUT
-# ============================================================
-def about():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    title(frame, "ABOUT THE USER").pack(pady=(10, 20))
-    tk.Label(
-        frame,
-        text="YAZHINI",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 25, "bold")
-    ).pack()
-    tk.Label(
-        frame,
-        text="",
-        bg=BG
-    ).pack()
-    info = [
-        "STATUS       : SPECIAL",
-        "ROLE         : SENIOR",
-        "CURRENT TASK : UNIVERSITY",
-        "LOCATION     : SOMEWHERE NEW",
-        "",
-        "PERSONALITY SCAN...",
-        "",
-        "→ Interesting",
-        "→ Probably dangerous when bored",
-        "→ Definitely birthday-worthy",
-        "",
-        "SCAN COMPLETE."
-    ]
-    tk.Label(
-        frame,
-        text="\n".join(info),
-        bg=BG,
-        fg=TEXT,
-        justify="left",
-        font=("Consolas", 12)
-    ).pack(pady=15)
-# ============================================================
-# NEXT DESTINATION
-# ============================================================
-def next_destination():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    title(frame, "NEXT DESTINATION").pack(pady=(10, 10))
-    subtitle(
-        frame,
-        "A new chapter is loading..."
-    ).pack(pady=(0, 25))
-    tk.Label(
-        frame,
-        text="🏠",
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI Emoji", 42)
-    ).pack()
-    tk.Label(
-        frame,
-        text="HOME",
-        bg=BG,
-        fg=ACCENT_2,
-        font=("Consolas", 20, "bold")
-    ).pack(pady=(5, 8))
-    tk.Label(
-        frame,
-        text="│",
-        bg=BG,
-        fg=MUTED,
-        font=("Consolas", 16)
-    ).pack()
-    tk.Label(
-        frame,
-        text="424 KM",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 26, "bold")
-    ).pack(pady=5)
-    tk.Label(
-        frame,
-        text="from home to a new beginning.",
-        bg=BG,
-        fg=MUTED,
-        font=("Segoe UI", 10, "italic")
-    ).pack(pady=(0, 8))
-    tk.Label(
-        frame,
-        text="│",
-        bg=BG,
-        fg=MUTED,
-        font=("Consolas", 16)
-    ).pack()
-    tk.Label(
-        frame,
-        text="🎓",
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI Emoji", 42)
-    ).pack()
-    tk.Label(
-        frame,
-        text="UNIVERSITY",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 20, "bold")
-    ).pack(pady=(5, 18))
-    message = (
-        "424 km is a long way from home.\n\n"
-        "New places might feel strange at first.\n"
-        "You might miss the people you're used to seeing every day.\n\n"
-        "But home doesn't become farther just because the distance gets bigger.\n\n"
-        "And wherever this new chapter takes you,\n"
-        "I hope you always have reasons to smile.\n\n"
-        "You've got this, senior. 🎓"
-    )
-    tk.Label(
-        frame,
-        text=message,
-        bg=BG,
-        fg=TEXT,
-        justify="center",
-        font=("Segoe UI", 12),
-        wraplength=750
-    ).pack(pady=10)
-    tk.Label(
-        frame,
-        text="SYSTEM MESSAGE: GOOD LUCK, SENIOR. ✨",
-        bg=BG,
-        fg=ACCENT_2,
-        font=("Consolas", 11, "bold")
-    ).pack(pady=12)
-# ============================================================
-# BIRTHDAY GAME
-# ============================================================
-def birthday_game():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    question = tk.Label(
-        frame,
-        text="Do you like chocolate? 🍫",
-        bg=BG,
-        fg=TEXT,
-        font=("Segoe UI", 24, "bold")
-    )
-    question.pack(pady=35)
-    status = tk.Label(
-        frame,
-        text="",
-        bg=BG,
-        fg=MUTED,
-        font=("Segoe UI", 11)
-    )
-    status.pack(pady=10)
-    buttons_frame = tk.Frame(frame, bg=BG)
-    buttons_frame.pack(pady=20)
-    # --------------------------------------------------------
-    # CHOCOLATE QUESTION
-    # --------------------------------------------------------
-    def yes_first():
-        question.config(
-            text="Do you like me?",
-            fg=PINK
-        )
-        status.config(
-            text="Please answer honestly."
-        )
-        for widget in buttons_frame.winfo_children():
-            widget.destroy()
-        yes = button(
-            buttons_frame,
-            "YES 👀",
-            yes_answer,
-            15
-        )
-        no = button(
-            buttons_frame,
-            "NO 😂",
-            no_answer,
-            15
-        )
-        yes.grid(row=0, column=0, padx=10)
-        no.grid(row=0, column=1, padx=10)
-    def yes_answer():
-        question.config(
-            text="Well... that wasn't expected. 👀",
-            fg=GREEN
-        )
-        status.config(
-            text="SYSTEM HAS SUCCESSFULLY RECORDED YOUR ANSWER."
-        )
-        for widget in buttons_frame.winfo_children():
-            widget.destroy()
-    def no_answer():
-        question.config(
-            text="The system has recorded your answer. 😂",
-            fg=TEXT
-        )
-        status.config(
-            text="No awkwardness detected."
-        )
-        for widget in buttons_frame.winfo_children():
-            widget.destroy()
-    yes = button(
-        buttons_frame,
-        "YES 🍫",
-        yes_first,
-        15
-    )
-    no = button(
-        buttons_frame,
-        "NO",
-        yes_first,
-        15
-    )
-    yes.grid(row=0, column=0, padx=10)
-    no.grid(row=0, column=1, padx=10)
-# ============================================================
-# LITTLE THINGS
-# MULTILINGUAL HIDDEN MESSAGE MAP
-# ============================================================
-def little_things():
-    clear_screen()
-    canvas = tk.Canvas(
-        root,
-        bg=BG,
-        highlightthickness=0
-    )
-    canvas.pack(fill="both", expand=True)
-    canvas.create_text(
-        SCREEN_W // 2,
-        35,
-        text="LITTLE THINGS",
-        fill=TEXT,
-        font=("Segoe UI", 20, "bold")
-    )
-    canvas.create_text(
-        SCREEN_W // 2,
-        65,
-        text="Some things are easier to find than others.",
-        fill=MUTED,
-        font=("Segoe UI", 10)
-    )
-    tk.Button(
-        root,
-        text="← BACK",
-        command=desktop,
-        bg=PANEL,
-        fg=MUTED,
-        relief="flat",
-        bd=0,
-        cursor="hand2"
-    ).place(
-        x=25,
-        y=25
-    )
-    # Background stars
-    for _ in range(250):
-        x = random.randint(0, SCREEN_W)
-        y = random.randint(90, SCREEN_H)
-        s = random.choice([1, 1, 2])
-        canvas.create_oval(
-            x,
-            y,
-            x + s,
-            y + s,
-            fill=random.choice([
-                "#111827",
-                "#182033",
-                "#222A3A"
-            ]),
-            outline=""
-        )
-    # --------------------------------------------------------
-    # POSITIVE HIDDEN MESSAGES
-    # --------------------------------------------------------
-    messages = [
-        ("ありがとう", "THANK YOU."),
-        ("Bonne chance", "GOOD LUCK."),
-        ("Sigue adelante", "KEEP GOING."),
-        ("Viel Glück", "YOU'VE GOT THIS."),
-        ("Будь счастлива", "STAY HAPPY."),
-        ("我相信你", "I BELIEVE IN YOU."),
-        ("넌 잘할 거야", "YOU'LL DO GREAT."),
-        ("Boa sorte", "GOOD THINGS AHEAD."),
-        ("Coraggio", "BE BRAVE."),
-        ("بالتوفيق", "BEST OF LUCK."),
-        ("शुभकामनाएँ", "BEST WISHES."),
-        ("Kaya mo 'yan", "YOU CAN DO THIS."),
-        ("Semoga berjaya", "KEEP SHINING."),
-        ("வெற்றி பெறுவாய்", "YOU'LL SUCCEED."),
-        ("சிரிச்சுட்டே இரு", "KEEP SMILING."),
-        ("சும்மா கலக்கு", "GO SHINE."),
-        ("สู้ๆ", "KEEP GOING."),
-        ("Καλή τύχη", "GOOD LUCK."),
-        ("Blijf stralen", "KEEP SHINING."),
-        ("Lycka till", "GOOD THINGS AHEAD."),
-        ("Noroc", "NEW BEGINNINGS."),
-        ("Powodzenia", "DON'T GIVE UP."),
-        ("Hakuna Matata", "STAY CALM."),
-        ("Namaste", "STAY KIND."),
-        ("سلام", "PEACE."),
-        ("Aloha", "ENJOY THE JOURNEY."),
-        ("Mi ŝatas la vivon", "ENJOY LIFE."),
-        ("Be Brave", "BE BRAVE."),
-        ("Respira", "BREATHE."),
-        ("Courage", "KEEP MOVING."),
-        ("Avanti", "MOVE FORWARD."),
-        ("Lumina", "KEEP GLOWING."),
-        ("Espero", "HOLD ONTO HOPE."),
-        ("新しい始まり", "NEW BEGINNINGS."),
-        ("未来へ", "TOWARDS TOMORROW."),
-        ("Believe", "BELIEVE."),
-        ("Smile", "KEEP SMILING."),
-        ("Dream", "DREAM BIG."),
-        ("Hope", "STAY HOPEFUL."),
-        ("Rise", "RISE HIGH."),
-        ("Keep Going", "KEEP GOING."),
-        ("You Matter", "YOU MATTER."),
-        ("Stay Curious", "STAY CURIOUS."),
-        ("One Step", "ONE STEP AT A TIME."),
-        ("Keep Learning", "KEEP LEARNING."),
-        ("Enjoy Today", "ENJOY TODAY."),
-        ("Stay Strong", "STAY STRONG."),
-        ("Stay Kind", "STAY KIND."),
-        ("Keep Creating", "KEEP CREATING."),
-        ("You're Enough", "YOU'RE ENOUGH."),
-        ("Good Energy", "GOOD ENERGY.")
-    ]
-    placed = []
-    def valid(x, y):
-        for px, py in placed:
-            if abs(x - px) < 130 and abs(y - py) < 55:
-                return False
-        return True
-    # --------------------------------------------------------
-    # PLACE HIDDEN MESSAGES
-    # --------------------------------------------------------
-    for foreign, english in messages:
-        for _ in range(300):
-            x = random.randint(
-                50,
-                SCREEN_W - 50
-            )
-            y = random.randint(
-                100,
-                SCREEN_H - 70
-            )
-            if valid(x, y):
-                break
-        placed.append((x, y))
-        item = canvas.create_text(
-            x,
-            y,
-            text=foreign,
-            fill="#171C2A",
-            font=("Segoe UI", random.choice([9, 10, 11]))
-        )
-        def reveal(event, it=item, msg=english):
-            canvas.itemconfig(
-                it,
-                text=msg,
-                fill=ACCENT_2,
-                font=("Segoe UI", 11, "bold")
-            )
-        canvas.tag_bind(
-            item,
-            "<Enter>",
-            reveal
-        )
-    # --------------------------------------------------------
-    # SECRET DEVELOPER EASTER EGG
-    # --------------------------------------------------------
-    morse = (
-        "- .... . / -.. . ...- . .-.. --- .--. . .-. / "
-        ".... --- .--. . ... / - .... .. ... / -- .- -.. . / "
-        "-.-- --- ..- / ... -- .. .-.. ."
-    )
-    dev = canvas.create_text(
-        SCREEN_W - 165,
-        SCREEN_H - 55,
-        text=morse,
-        fill="#101520",
-        font=("Consolas", 7)
-    )
-    def reveal_dev(event):
-        canvas.itemconfig(
-            dev,
-            text="The developer hopes this made you smile. :)",
-            fill=PINK,
-            font=("Segoe UI", 9, "italic")
-        )
-    canvas.tag_bind(
-        dev,
-        "<Enter>",
-        reveal_dev
-    )
-    # --------------------------------------------------------
-    # INSTRUCTION
-    # --------------------------------------------------------
-    canvas.create_text(
-        SCREEN_W // 2,
-        SCREEN_H - 25,
-        text="Move your mouse slowly... there may be things you haven't seen yet.",
-        fill="#394257",
-        font=("Segoe UI", 9)
-    )
-# ============================================================
-# SECRET
-# ============================================================
-def secret():
-    password_window = tk.Toplevel(root)
-    password_window.title("ACCESS REQUIRED")
-    password_window.configure(bg=BG)
-    password_window.geometry("440x330")
-    password_window.resizable(False, False)
-    password_window.update_idletasks()
-    x = (
-        password_window.winfo_screenwidth() // 2
-    ) - 220
-    y = (
-        password_window.winfo_screenheight() // 2
-    ) - 165
-    password_window.geometry(
-        f"440x330+{x}+{y}"
-    )
-    tk.Label(
-        password_window,
-        text="🔒 SECRET FILE",
-        bg=BG,
-        fg=ACCENT,
-        font=("Segoe UI", 22, "bold")
-    ).pack(pady=(30, 15))
-    tk.Label(
-        password_window,
-        text="THIS FILE REQUIRES AUTHORIZATION.",
-        bg=BG,
-        fg=TEXT,
-        font=("Consolas", 10)
-    ).pack(pady=5)
-    tk.Label(
-        password_window,
-        text="Hint: The name of the person this system was created for.",
-        bg=BG,
-        fg=MUTED,
-        font=("Segoe UI", 9),
-        wraplength=350
-    ).pack(pady=(10, 20))
-    entry = tk.Entry(
-        password_window,
-        bg=PANEL_2,
-        fg=TEXT,
-        insertbackground=TEXT,
-        relief="flat",
-        justify="center",
-        font=("Consolas", 13),
-        width=25
-    )
-    entry.pack(ipady=8)
-    entry.focus_set()
-    status = tk.Label(
-        password_window,
-        text="",
-        bg=BG,
-        fg=RED,
-        font=("Segoe UI", 9)
-    )
-    status.pack(pady=10)
-    # --------------------------------------------------------
-    # PASSWORD
-    # --------------------------------------------------------
-    def unlock():
-        password = entry.get().strip().upper()
-        if password == "YAZHUMAA":
-            status.config(
-                text="ACCESS GRANTED.",
-                fg=GREEN
-            )
-            password_window.update()
-            password_window.after(
-                700,
-                lambda: [
-                    password_window.destroy(),
-                    secret_file()
-                ]
-            )
-        else:
-            status.config(
-                text="ACCESS DENIED. Try again. 👀",
-                fg=RED
-            )
-            entry.delete(
-                0,
-                tk.END
-            )
-    unlock_button = button(
-        password_window,
-        "UNLOCK",
-        unlock,
-        15
-    )
-    unlock_button.pack(pady=5)
-    password_window.bind(
-        "<Return>",
-        lambda event: unlock()
-    )
-# ============================================================
-# SECRET FILE
-# ============================================================
-def secret_file():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    tk.Label(
-        frame,
-        text="YAZHINI.txt",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 24, "bold")
-    ).pack(pady=(0, 30))
-    content = (
-        "We haven't known each other for very long.\n\n"
-        "But somehow, you're still someone\n"
-        "I wanted to make something for.\n\n"
-        "Happy Birthday, Yazhini. :)\n"
-    )
-    tk.Label(
-        frame,
-        text=content,
-        bg=BG,
-        fg=TEXT,
-        justify="center",
-        font=("Segoe UI", 14),
-        wraplength=650
-    ).pack(pady=15)
-    tk.Label(
-        frame,
-        text="FILE STATUS: UNLOCKED",
-        bg=BG,
-        fg=GREEN,
-        font=("Consolas", 10, "bold")
-    ).pack(pady=25)
-# ============================================================
-# FINAL MESSAGE
-# ============================================================
-def final_message():
-    clear_screen()
-    close_button(root)
-    frame = tk.Frame(root, bg=BG)
-    frame.pack(expand=True)
-    tk.Label(
-        frame,
-        text="SYSTEM MESSAGE",
-        bg=BG,
-        fg=ACCENT,
-        font=("Consolas", 14, "bold")
-    ).pack(pady=(0, 20))
-    message = (
-        "You probably expected a birthday wish.\n\n"
-        "Instead, you got a whole unnecessary computer program. 😂\n\n"
-        "But honestly...\n"
-        "Happy Birthday, Yazhini.\n\n"
-        "I hope university brings you good people,\n"
-        "good experiences, and plenty of reasons to smile.\n\n"
-        "Take care, senior. 🎓"
-    )
-    tk.Label(
-        frame,
-        text=message,
-        bg=BG,
-        fg=TEXT,
-        justify="center",
-        font=("Segoe UI", 14),
-        wraplength=750
-    ).pack()
-    tk.Label(
-        frame,
-        text="— YAZHINI.EXE",
-        bg=BG,
-        fg=PINK,
-        font=("Consolas", 11, "bold")
-    ).pack(pady=30)
-# ============================================================
-# ESCAPE TO EXIT FULLSCREEN
-# ============================================================
-def exit_fullscreen(event=None):
-    try:
-        root.attributes("-fullscreen", False)
-    except:
-        pass
-    root.destroy()
-root.bind("<Escape>", exit_fullscreen)
-# ============================================================
-# START
-# ============================================================
-boot_screen()
-root.mainloop()
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAZHINI.EXE</title>
+
+<style>
+:root {
+    --bg: #080A12;
+    --panel: #101522;
+    --panel2: #151B2B;
+    --text: #F2F4FF;
+    --muted: #7E879F;
+    --accent: #8B7CFF;
+    --teal: #45E0C4;
+    --pink: #FF6FAE;
+    --red: #FF5577;
+    --green: #61E294;
+    --yellow: #FFD166;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    overflow: hidden;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ============================================================
+   BOOT SCREEN
+============================================================ */
+
+#bootScreen {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.boot-container {
+    width: min(600px, 90vw);
+}
+
+.boot-logo {
+    color: var(--accent);
+    font-family: Consolas, monospace;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#bootText {
+    color: var(--text);
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+/* ============================================================
+   DESKTOP
+============================================================ */
+
+.screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#desktop {
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.desktop-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 55px;
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    z-index: 5;
+}
+
+.header-left {
+    color: var(--accent);
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.header-center {
+    color: var(--muted);
+    font-family: Consolas, monospace;
+    font-size: 10px;
+}
+
+.header-right {
+    color: var(--green);
+    font-family: Consolas, monospace;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.welcome {
+    position: absolute;
+    top: 95px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.welcome h1 {
+    margin: 0;
+    color: var(--text);
+    font-size: 26px;
+}
+
+.welcome p {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* ============================================================
+   APP CARDS
+============================================================ */
+
+.apps {
+    position: absolute;
+    top: 205px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    display: grid;
+    grid-template-columns: repeat(3, 220px);
+    gap: 30px 50px;
+    justify-content: center;
+}
+
+.app-card {
+    width: 220px;
+    height: 115px;
+    background: var(--panel);
+    border: 1px solid #1C2335;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: 0.15s ease;
+    user-select: none;
+}
+
+.app-card:hover {
+    background: var(--panel2);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.app-card:hover .app-icon {
+    color: var(--accent);
+}
+
+.app-card:hover .app-name {
+    color: var(--accent);
+}
+
+.app-icon {
+    font-size: 23px;
+    line-height: 1;
+    margin-bottom: 9px;
+}
+
+.app-name {
+    color: var(--text);
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.app-card:nth-child(7) {
+    grid-column: 2;
+}
+
+.footer {
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #3B435A;
+    font-family: Consolas, monospace;
+    font-size: 9px;
+}
+
+/* ============================================================
+   GENERAL PAGE
+============================================================ */
+
+.page {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    padding-top: 20px;
+}
+
+.back-button {
+    position: absolute;
+    top: 25px;
+    left: 35px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: bold;
+    padding: 8px 0;
+    z-index: 10;
+}
+
+.back-button:hover {
+    color: var(--text);
+}
+
+.center-content {
+    width: min(850px, 90vw);
+    min-height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.page-title {
+    color: var(--text);
+    font-size: 25px;
+    font-weight: bold;
+    margin: 0 0 20px;
+}
+
+.page-subtitle {
+    color: var(--muted);
+    font-size: 11px;
+    margin: 0 0 25px;
+}
+
+/* ============================================================
+   BIRTHDAY
+============================================================ */
+
+.birthday-title {
+    color: var(--pink);
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: bold;
+    min-height: 55px;
+}
+
+.birthday-message {
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+/* ============================================================
+   ABOUT
+============================================================ */
+
+.about-name {
+    color: var(--accent);
+    font-family: Consolas, monospace;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.about-info {
+    color: var(--text);
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.65;
+    text-align: left;
+    white-space: pre-line;
+}
+
+/* ============================================================
+   NEXT DESTINATION
+============================================================ */
+
+.destination-icon {
+    font-size: 42px;
+}
+
+.destination-label {
+    font-family: Consolas, monospace;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 5px 0 8px;
+}
+
+.home-label {
+    color: var(--teal);
+}
+
+.university-label {
+    color: var(--accent);
+}
+
+.vertical-line {
+    color: var(--muted);
+    font-family: Consolas, monospace;
+    font-size: 16px;
+}
+
+.distance {
+    color: var(--accent);
+    font-family: Consolas, monospace;
+    font-size: 26px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.distance-text {
+    color: var(--muted);
+    font-size: 10px;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+.destination-message {
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1.55;
+    white-space: pre-line;
+    max-width: 750px;
+    margin: 10px auto;
+}
+
+.system-message {
+    color: var(--teal);
+    font-family: Consolas, monospace;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+/* ============================================================
+   GAME
+============================================================ */
+
+.game-question {
+    color: var(--text);
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.game-status {
+    color: var(--muted);
+    font-size: 11px;
+    margin-bottom: 20px;
+}
+
+.game-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.game-button,
+.unlock-button {
+    min-width: 150px;
+    height: 50px;
+    border: 0;
+    background: var(--panel2);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: bold;
+    transition: 0.15s;
+}
+
+.game-button:hover,
+.unlock-button:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* ============================================================
+   LITTLE THINGS
+============================================================ */
+
+#littleScreen {
+    overflow: hidden;
+}
+
+.little-title {
+    position: absolute;
+    top: 35px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: bold;
+    z-index: 3;
+}
+
+.little-subtitle {
+    position: absolute;
+    top: 65px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 10px;
+    z-index: 3;
+}
+
+.message-map {
+    position: absolute;
+    inset: 90px 0 55px 0;
+    overflow: hidden;
+}
+
+.hidden-message {
+    position: absolute;
+    color: #171C2A;
+    font-size: 10px;
+    white-space: nowrap;
+    transition: color 0.15s, transform 0.15s;
+    cursor: default;
+    z-index: 2;
+}
+
+.hidden-message:hover {
+    color: var(--teal);
+    font-size: 11px;
+    font-weight: bold;
+    transform: scale(1.04);
+}
+
+.dev-easter {
+    position: absolute;
+    right: 80px;
+    bottom: 45px;
+    color: #101520;
+    font-family: Consolas, monospace;
+    font-size: 7px;
+    cursor: default;
+    z-index: 3;
+}
+
+.dev-easter:hover {
+    color: var(--pink);
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 9px;
+    font-style: italic;
+}
+
+.little-instruction {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #394257;
+    font-size: 9px;
+}
+
+/* ============================================================
+   SECRET MODAL
+============================================================ */
+
+#secretOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 10, 18, 0.88);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+}
+
+.secret-window {
+    width: 440px;
+    max-width: calc(100vw - 40px);
+    min-height: 330px;
+    background: var(--bg);
+    border: 1px solid #1C2335;
+    text-align: center;
+    padding: 30px 25px;
+}
+
+.secret-title {
+    color: var(--accent);
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.secret-auth {
+    color: var(--text);
+    font-family: Consolas, monospace;
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.secret-hint {
+    color: var(--muted);
+    font-size: 9px;
+    max-width: 350px;
+    margin: 10px auto 20px;
+}
+
+#passwordInput {
+    width: 250px;
+    max-width: 90%;
+    height: 42px;
+    border: 0;
+    outline: none;
+    background: var(--panel2);
+    color: var(--text);
+    text-align: center;
+    font-family: Consolas, monospace;
+    font-size: 13px;
+}
+
+.secret-status {
+    height: 20px;
+    margin: 10px 0;
+    color: var(--red);
+    font-size: 9px;
+}
+
+.unlock-button {
+    min-width: 150px;
+}
+
+/* ============================================================
+   SECRET FILE
+============================================================ */
+
+.file-title {
+    color: var(--accent);
+    font-family: Consolas, monospace;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.file-content {
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+.file-status {
+    color: var(--green);
+    font-family: Consolas, monospace;
+    font-size: 10px;
+    font-weight: bold;
+    margin-top: 25px;
+}
+
+/* ============================================================
+   FINAL MESSAGE
+============================================================ */
+
+.final-title {
+    color: var(--accent);
+    font-family: Consolas, monospace;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.final-content {
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+.final-signature {
+    color: var(--pink);
+    font-family: Consolas, monospace;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 30px;
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 850px) {
+    .apps {
+        width: 480px;
+        grid-template-columns: repeat(2, 220px);
+        gap: 20px;
+    }
+
+    .app-card:nth-child(7) {
+        grid-column: 1 / span 2;
+        justify-self: center;
+    }
+
+    .welcome {
+        top: 80px;
+    }
+
+    .welcome h1 {
+        font-size: 22px;
+    }
+
+    .welcome p {
+        font-size: 10px;
+    }
+
+    .apps {
+        top: 165px;
+    }
+}
+
+@media (max-width: 560px) {
+    html,
+    body,
+    #app {
+        overflow-y: auto;
+    }
+
+    #desktop {
+        overflow-y: auto;
+    }
+
+    .desktop-header {
+        padding: 0 12px;
+    }
+
+    .header-center {
+        display: none;
+    }
+
+    .header-left,
+    .header-right {
+        font-size: 9px;
+    }
+
+    .welcome {
+        top: 80px;
+    }
+
+    .apps {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 220px;
+        margin: 145px auto 70px;
+        grid-template-columns: 220px;
+        gap: 15px;
+    }
+
+    .app-card:nth-child(7) {
+        grid-column: auto;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 12px;
+    }
+
+    .back-button {
+        left: 20px;
+    }
+
+    .destination-message {
+        padding: 0 25px;
+        font-size: 11px;
+    }
+
+    .about-info {
+        font-size: 10px;
+        padding: 0 20px;
+    }
+
+    .dev-easter {
+        right: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+    <!-- ======================================================
+         BOOT
+    ======================================================= -->
+
+    <section id="bootScreen">
+        <div class="boot-container">
+            <div class="boot-logo">YAZHINI.EXE</div>
+            <div id="bootText"></div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================
+         DESKTOP
+    ======================================================= -->
+
+    <section id="desktop" class="screen hidden">
+
+        <div id="desktopStars"></div>
+
+        <header class="desktop-header">
+            <div class="header-left">YAZHINI.EXE</div>
+            <div class="header-center">PERSONAL SYSTEM</div>
+            <div class="header-right">● SYSTEM ONLINE</div>
+        </header>
+
+        <div class="welcome">
+            <h1>WELCOME, YAZHINI.</h1>
+            <p>There are a few things hidden around here.</p>
+        </div>
+
+        <div class="apps">
+
+            <div class="app-card" onclick="birthday()">
+                <div class="app-icon">🎂</div>
+                <div class="app-name">BIRTHDAY</div>
+            </div>
+
+            <div class="app-card" onclick="about()">
+                <div class="app-icon">👤</div>
+                <div class="app-name">ABOUT</div>
+            </div>
+
+            <div class="app-card" onclick="nextDestination()">
+                <div class="app-icon">🎓</div>
+                <div class="app-name">NEXT DESTINATION</div>
+            </div>
+
+            <div class="app-card" onclick="birthdayGame()">
+                <div class="app-icon">🎮</div>
+                <div class="app-name">BIRTHDAY GAME</div>
+            </div>
+
+            <div class="app-card" onclick="littleThings()">
+                <div class="app-icon">⭐</div>
+                <div class="app-name">LITTLE THINGS</div>
+            </div>
+
+            <div class="app-card" onclick="secret()">
+                <div class="app-icon">🔒</div>
+                <div class="app-name">SECRET</div>
+            </div>
+
+            <div class="app-card" onclick="finalMessage()">
+                <div class="app-icon">💌</div>
+                <div class="app-name">MESSAGE</div>
+            </div>
+
+        </div>
+
+        <div class="footer">ESC • EXIT SYSTEM</div>
+
+    </section>
+
+
+    <!-- ======================================================
+         BIRTHDAY
+    ======================================================= -->
+
+    <section id="birthdayScreen" class="screen hidden page">
+
+        <button class="back-button" onclick="desktop()">← BACK</button>
+
+        <div class="center-content">
+
+            <div id="birthdayTitle" class="birthday-title"></div>
+
+            <div class="birthday-message">
+                Today, the system has one very important task.
+
+                Make sure Yazhini has a good birthday. ✨
+
+                SYSTEM PRIORITY: 100%
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         ABOUT
+    ======================================================= -->
+
+    <section id="aboutScreen" class="screen hidden page">
+
+        <button class="back-button" onclick="desktop()">← BACK</button>
+
+        <div class="center-content">
+
+            <div class="page-title">ABOUT THE USER</div>
+
+            <div class="about-name">YAZHINI</div>
+
+            <div class="about-info">
+STATUS       : SPECIAL
+ROLE         : SENIOR
+CURRENT TASK : UNIVERSITY
+LOCATION     : SOMEWHERE NEW
+
+PERSONALITY SCAN...
+
+→ Interesting
+→ Probably dangerous when bored
+→ Definitely birthday-worthy
+
+SCAN COMPLETE.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         NEXT DESTINATION
+    ======================================================= -->
+
+    <section id="destinationScreen" class="screen hidden page">
+
+        <button class="back-button" onclick="desktop()">← BACK</button>
+
+        <div class="center-content">
+
+            <div class="page-title">NEXT DESTINATION</div>
+
+            <div class="page-subtitle">A new chapter is loading...</div>
+
+            <div class="destination-icon">🏠</div>
+
+            <div class="destination-label home-label">HOME</div>
+
+            <div class="vertical-line">│</div>
+
+            <div class="distance">424 KM</div>
+
+            <div class="distance-text">
+                from home to a new beginning.
+            </div>
+
+            <div class="vertical-line">│</div>
+
+            <div class="destination-icon">🎓</div>
+
+            <div class="destination-label university-label">
+                UNIVERSITY
+            </div>
+
+            <div class="destination-message">
+424 km is a long way from home.
+
+New places might feel strange at first.
+You might miss the people you're used to seeing every day.
+
+But home doesn't become farther just because the distance gets bigger.
+
+And wherever this new chapter takes you,
+I hope you always have reasons to smile.
+
+You've got this, senior. 🎓
+            </div>
+
+            <div class="system-message">
+                SYSTEM MESSAGE: GOOD LUCK, SENIOR. ✨
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         BIRTHDAY GAME
+    ======================================================= -->
+
+    <section id="gameScreen" class="screen hidden page">
+
+        <button class="back-button" onclick="desktop()">← BACK</button>
+
+        <div class="center-content">
+
+            <div id="gameQuestion" class="game-question">
+                Do you like chocolate? 🍫
+            </div>
+
+            <div id="gameStatus" class="game-status"></div>
+
+            <div id="gameButtons" class="game-buttons">
+
+                <button class="game-button" onclick="yesFirst()">
+                    YES 🍫
+                </button>
+
+                <button class="game-button" onclick="yesFirst()">
+                    NO
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         LITTLE THINGS
+    ======================================================= -->
+
+    <section id="littleScreen" class="screen hidden">
+
+        <div id="littleStars"></div>
+
+        <div class="little-title">LITTLE THINGS</div>
+
+        <div class="little-subtitle">
+            Some things are easier to find than others.
+        </div>
+
+        <button class="back-button" onclick="desktop()">
+            ← BACK
+        </button>
+
+        <div id="messageMap" class="message-map"></div>
+
+        <div id="developerEgg" class="dev-easter">
+            - .... . / -.. . ...- . .-.. --- .--. . .-. /
+            .... --- .--. . ... / - .... .. ... / -- .- -..
+            . / -.-- --- ..- / ... -- .. .-.. .
+        </div>
+
+        <div class="little-instruction">
+            Move your mouse slowly... there may be things you haven't seen yet.
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         SECRET FILE PASSWORD
+    ======================================================= -->
+
+    <div id="secretOverlay" class="hidden">
+
+        <div class="secret-window">
+
+            <div class="secret-title">
+                🔒 SECRET FILE
+            </div>
+
+            <div class="secret-auth">
+                THIS FILE REQUIRES AUTHORIZATION.
+            </div>
+
+            <div class="secret-hint">
+                Hint: The name of the person this system was created for.
+            </div>
+
+            <input
+                id="passwordInput"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+            >
+
+            <div id="secretStatus" class="secret-status"></div>
+
+            <button class="unlock-button" onclick="unlockSecret()">
+                UNLOCK
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         SECRET FILE
+    ======================================================= -->
+
+    <section id="secretFileScreen" class="screen hidden page">
+
+        <button class="back-button" onclick="desktop()">← BACK</button>
+
+        <div class="center-content">
+
+            <div class="file-title">
+                YAZHINI.txt
+            </div>
+
+            <div class="file-content">
+We haven't known each other for very long.
+
+But somehow, you're still someone
+I wanted to make something for.
+
+Happy Birthday, Yazhini. :)
+            </div>
+
+            <div class="file-status">
+                FILE STATUS: UNLOCKED
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ======================================================
+         FINAL MESSAGE
+    ======================================================= -->
+
+    <section id="finalScreen" class="screen hidden page">
+
+        <button class="back-button" onclick="desktop()">← BACK</button>
+
+        <div class="center-content">
+
+            <div class="final-title">
+                SYSTEM MESSAGE
+            </div>
+
+            <div class="final-content">
+You probably expected a birthday wish.
+
+Instead, you got a whole unnecessary computer program. 😂
+
+But honestly...
+Happy Birthday, Yazhini.
+
+I hope university brings you good people,
+good experiences, and plenty of reasons to smile.
+
+Take care, senior. 🎓
+            </div>
+
+            <div class="final-signature">
+                — YAZHINI.EXE
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- ============================================================
+     MUSIC
+============================================================ -->
+
+<audio id="backgroundMusic" loop preload="auto">
+    <source src="First-Sight.mp3.mpeg" type="audio/mpeg">
+</audio>
+
+
+<script>
+
+/* ============================================================
+   YAZHINI.EXE
+   GitHub Pages Version
+============================================================ */
+
+const BG = "#080A12";
+const PANEL = "#101522";
+const ACCENT = "#8B7CFF";
+const TEAL = "#45E0C4";
+const PINK = "#FF6FAE";
+const GREEN = "#61E294";
+
+
+/* ============================================================
+   MUSIC
+============================================================ */
+
+const music = document.getElementById("backgroundMusic");
+
+music.volume = 1.0;
+
+function startMusic() {
+    music.play().catch(() => {
+        // Browser blocked autoplay.
+        // It will retry after user interaction.
+    });
+}
+
+window.addEventListener("click", startMusic, { once: true });
+window.addEventListener("touchstart", startMusic, { once: true });
+window.addEventListener("keydown", startMusic, { once: true });
+
+
+/* ============================================================
+   SCREEN CONTROL
+============================================================ */
+
+const screenIds = [
+    "desktop",
+    "birthdayScreen",
+    "aboutScreen",
+    "destinationScreen",
+    "gameScreen",
+    "littleScreen",
+    "secretFileScreen"
+];
+
+function hideAllScreens() {
+    screenIds.forEach(id => {
+        document.getElementById(id).classList.add("hidden");
+    });
+}
+
+function showScreen(id) {
+    hideAllScreens();
+    document.getElementById(id).classList.remove("hidden");
+}
+
+function desktop() {
+    showScreen("desktop");
+}
+
+
+/* ============================================================
+   BOOT SCREEN
+============================================================ */
+
+const bootLines = [
+    "INITIALIZING PERSONAL SYSTEM...",
+    "",
+    "Loading birthday protocol...",
+    "Loading memories...",
+    "Loading tiny surprises...",
+    "Searching for Yazhini...",
+    "",
+    "USER FOUND.",
+    "",
+    "IDENTITY: YAZHINI",
+    "ACCESS LEVEL: SPECIAL",
+    "",
+    "SYSTEM READY."
+];
+
+let bootIndex = 0;
+
+function nextBootLine() {
+
+    const bootText = document.getElementById("bootText");
+
+    if (bootIndex < bootLines.length) {
+
+        if (bootIndex > 0) {
+            bootText.textContent += "\n";
+        }
+
+        bootText.textContent += bootLines[bootIndex];
+
+        bootIndex++;
+
+        setTimeout(nextBootLine, 170);
+
+    } else {
+
+        setTimeout(() => {
+
+            document.getElementById("bootScreen")
+                .classList.add("hidden");
+
+            desktop();
+
+            startMusic();
+
+        }, 900);
+    }
+}
+
+
+/* ============================================================
+   DESKTOP STARS
+============================================================ */
+
+function createStars(containerId, amount, colors) {
+
+    const container = document.getElementById(containerId);
+
+    container.innerHTML = "";
+
+    for (let i = 0; i < amount; i++) {
+
+        const star = document.createElement("div");
+
+        star.className = "star";
+
+        star.style.left = Math.random() * 100 + "%";
+        star.style.top = Math.random() * 100 + "%";
+
+        const size = Math.random() < 0.8 ? 1 : 2;
+
+        star.style.width = size + "px";
+        star.style.height = size + "px";
+
+        star.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+
+        container.appendChild(star);
+    }
+}
+
+
+/* ============================================================
+   BIRTHDAY
+============================================================ */
+
+function birthday() {
+
+    showScreen("birthdayScreen");
+
+    const label = document.getElementById("birthdayTitle");
+
+    label.textContent = "";
+
+    const text = "HAPPY BIRTHDAY, YAZHINI 🎂";
+
+    let i = 0;
+
+    function typeWriter() {
+
+        if (i < text.length) {
+
+            label.textContent += text.charAt(i);
+
+            i++;
+
+            setTimeout(typeWriter, 45);
+        }
+    }
+
+    typeWriter();
+}
+
+
+/* ============================================================
+   ABOUT
+============================================================ */
+
+function about() {
+    showScreen("aboutScreen");
+}
+
+
+/* ============================================================
+   NEXT DESTINATION
+============================================================ */
+
+function nextDestination() {
+    showScreen("destinationScreen");
+}
+
+
+/* ============================================================
+   BIRTHDAY GAME
+============================================================ */
+
+function birthdayGame() {
+
+    showScreen("gameScreen");
+
+    const question =
+        document.getElementById("gameQuestion");
+
+    const status =
+        document.getElementById("gameStatus");
+
+    const buttons =
+        document.getElementById("gameButtons");
+
+    question.textContent =
+        "Do you like chocolate? 🍫";
+
+    question.style.color = "var(--text)";
+
+    status.textContent = "";
+
+    buttons.innerHTML = `
+        <button class="game-button" onclick="yesFirst()">
+            YES 🍫
+        </button>
+
+        <button class="game-button" onclick="yesFirst()">
+            NO
+        </button>
+    `;
+}
+
+
+function yesFirst() {
+
+    const question =
+        document.getElementById("gameQuestion");
+
+    const status =
+        document.getElementById("gameStatus");
+
+    const buttons =
+        document.getElementById("gameButtons");
+
+    question.textContent = "Do you like me?";
+
+    question.style.color = PINK;
+
+    status.textContent =
+        "Please answer honestly.";
+
+    buttons.innerHTML = `
+        <button class="game-button" onclick="yesAnswer()">
+            YES 👀
+        </button>
+
+        <button class="game-button" onclick="noAnswer()">
+            NO 😂
+        </button>
+    `;
+}
+
+
+function yesAnswer() {
+
+    const question =
+        document.getElementById("gameQuestion");
+
+    const status =
+        document.getElementById("gameStatus");
+
+    const buttons =
+        document.getElementById("gameButtons");
+
+    question.textContent =
+        "Well... that wasn't expected. 👀";
+
+    question.style.color = GREEN;
+
+    status.textContent =
+        "SYSTEM HAS SUCCESSFULLY RECORDED YOUR ANSWER.";
+
+    buttons.innerHTML = "";
+}
+
+
+function noAnswer() {
+
+    const question =
+        document.getElementById("gameQuestion");
+
+    const status =
+        document.getElementById("gameStatus");
+
+    const buttons =
+        document.getElementById("gameButtons");
+
+    question.textContent =
+        "The system has recorded your answer. 😂";
+
+    question.style.color = "var(--text)";
+
+    status.textContent =
+        "No awkwardness detected.";
+
+    buttons.innerHTML = "";
+}
+
+
+/* ============================================================
+   LITTLE THINGS
+============================================================ */
+
+const messages = [
+
+    ["ありがとう", "THANK YOU."],
+    ["Bonne chance", "GOOD LUCK."],
+    ["Sigue adelante", "KEEP GOING."],
+    ["Viel Glück", "YOU'VE GOT THIS."],
+    ["Будь счастлива", "STAY HAPPY."],
+    ["我相信你", "I BELIEVE IN YOU."],
+    ["넌 잘할 거야", "YOU'LL DO GREAT."],
+    ["Boa sorte", "GOOD THINGS AHEAD."],
+    ["Coraggio", "BE BRAVE."],
+    ["بالتوفيق", "BEST OF LUCK."],
+    ["शुभकामनाएँ", "BEST WISHES."],
+    ["Kaya mo 'yan", "YOU CAN DO THIS."],
+    ["Semoga berjaya", "KEEP SHINING."],
+    ["வெற்றி பெறுவாய்", "YOU'LL SUCCEED."],
+    ["சிரிச்சுட்டே இரு", "KEEP SMILING."],
+    ["சும்மா கலக்கு", "GO SHINE."],
+    ["สู้ๆ", "KEEP GOING."],
+    ["Καλή τύχη", "GOOD LUCK."],
+    ["Blijf stralen", "KEEP SHINING."],
+    ["Lycka till", "GOOD THINGS AHEAD."],
+    ["Noroc", "NEW BEGINNINGS."],
+    ["Powodzenia", "DON'T GIVE UP."],
+    ["Hakuna Matata", "STAY CALM."],
+    ["Namaste", "STAY KIND."],
+    ["سلام", "PEACE."],
+    ["Aloha", "ENJOY THE JOURNEY."],
+    ["Mi ŝatas la vivon", "ENJOY LIFE."],
+    ["Be Brave", "BE BRAVE."],
+    ["Respira", "BREATHE."],
+    ["Courage", "KEEP MOVING."],
+    ["Avanti", "MOVE FORWARD."],
+    ["Lumina", "KEEP GLOWING."],
+    ["Espero", "HOLD ONTO HOPE."],
+    ["新しい始まり", "NEW BEGINNINGS."],
+    ["未来へ", "TOWARDS TOMORROW."],
+    ["Believe", "BELIEVE."],
+    ["Smile", "KEEP SMILING."],
+    ["Dream", "DREAM BIG."],
+    ["Hope", "STAY HOPEFUL."],
+    ["Rise", "RISE HIGH."],
+    ["Keep Going", "KEEP GOING."],
+    ["You Matter", "YOU MATTER."],
+    ["Stay Curious", "STAY CURIOUS."],
+    ["One Step", "ONE STEP AT A TIME."],
+    ["Keep Learning", "KEEP LEARNING."],
+    ["Enjoy Today", "ENJOY TODAY."],
+    ["Stay Strong", "STAY STRONG."],
+    ["Stay Kind", "STAY KIND."],
+    ["Keep Creating", "KEEP CREATING."],
+    ["You're Enough", "YOU'RE ENOUGH."],
+    ["Good Energy", "GOOD ENERGY."]
+];
+
+
+function littleThings() {
+
+    showScreen("littleScreen");
+
+    createStars(
+        "littleStars",
+        250,
+        ["#111827", "#182033", "#222A3A"]
+    );
+
+    const map =
+        document.getElementById("messageMap");
+
+    map.innerHTML = "";
+
+    const placed = [];
+
+    function valid(x, y) {
+
+        for (const position of placed) {
+
+            if (
+                Math.abs(x - position.x) < 130 &&
+                Math.abs(y - position.y) < 55
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    messages.forEach(([foreign, english]) => {
+
+        let x;
+        let y;
+
+        let found = false;
+
+        for (let attempt = 0; attempt < 300; attempt++) {
+
+            x = Math.random() * 90 + 5;
+            y = Math.random() * 85 + 5;
+
+            if (valid(x, y)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            x = Math.random() * 90 + 5;
+            y = Math.random() * 85 + 5;
+        }
+
+        placed.push({ x, y });
+
+        const item =
+            document.createElement("div");
+
+        item.className = "hidden-message";
+
+        item.textContent = foreign;
+
+        item.style.left = x + "%";
+        item.style.top = y + "%";
+
+        item.dataset.original = foreign;
+        item.dataset.reveal = english;
+
+        item.addEventListener("mouseenter", () => {
+            item.textContent = english;
+        });
+
+        item.addEventListener("mouseleave", () => {
+            item.textContent = foreign;
+        });
+
+        map.appendChild(item);
+    });
+}
+
+
+/* ============================================================
+   DEVELOPER EASTER EGG
+============================================================ */
+
+const developerEgg =
+    document.getElementById("developerEgg");
+
+developerEgg.addEventListener("mouseenter", () => {
+
+    developerEgg.textContent =
+        "The developer hopes this made you smile. :)";
+
+});
+
+developerEgg.addEventListener("mouseleave", () => {
+
+    developerEgg.textContent =
+        "- .... . / -.. . ...- . .-.. --- .--. . .-. / " +
+        ".... --- .--. . ... / - .... .. ... / -- .- -.. . / " +
+        "-.-- --- ..- / ... -- .. .-.. .";
+});
+
+
+/* ============================================================
+   SECRET
+============================================================ */
+
+function secret() {
+
+    const overlay =
+        document.getElementById("secretOverlay");
+
+    const input =
+        document.getElementById("passwordInput");
+
+    const status =
+        document.getElementById("secretStatus");
+
+    overlay.classList.remove("hidden");
+
+    input.value = "";
+
+    status.textContent = "";
+
+    setTimeout(() => input.focus(), 50);
+}
+
+
+function unlockSecret() {
+
+    const input =
+        document.getElementById("passwordInput");
+
+    const status =
+        document.getElementById("secretStatus");
+
+    const password =
+        input.value.trim().toUpperCase();
+
+    if (password === "YAZHUMAA") {
+
+        status.textContent = "ACCESS GRANTED.";
+
+        status.style.color = GREEN;
+
+        setTimeout(() => {
+
+            document
+                .getElementById("secretOverlay")
+                .classList.add("hidden");
+
+            secretFile();
+
+        }, 700);
+
+    } else {
+
+        status.textContent =
+            "ACCESS DENIED. Try again. 👀";
+
+        status.style.color = "#FF5577";
+
+        input.value = "";
+        input.focus();
+    }
+}
+
+
+/* ============================================================
+   ENTER KEY FOR PASSWORD
+============================================================ */
+
+document
+    .getElementById("passwordInput")
+    .addEventListener("keydown", event => {
+
+        if (event.key === "Enter") {
+            unlockSecret();
+        }
+
+    });
+
+
+/* ============================================================
+   SECRET FILE
+============================================================ */
+
+function secretFile() {
+    showScreen("secretFileScreen");
+}
+
+
+/* ============================================================
+   FINAL MESSAGE
+============================================================ */
+
+function finalMessage() {
+    showScreen("finalScreen");
+}
+
+
+/* ============================================================
+   ESCAPE
+============================================================ */
+
+document.addEventListener("keydown", event => {
+
+    if (event.key === "Escape") {
+
+        if (document.fullscreenElement) {
+
+            document.exitFullscreen().catch(() => {});
+
+        }
+
+    }
+
+});
+
+
+/* ============================================================
+   START
+============================================================ */
+
+createStars(
+    "desktopStars",
+    180,
+    ["#171C2A", "#1C2232", "#20263A", "#242B40"]
+);
+
+nextBootLine();
+
+</script>
+
+</body>
+</html>
