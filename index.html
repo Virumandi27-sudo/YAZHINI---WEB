@@ -749,7 +749,7 @@ button {
          BOOT
     ======================================================= -->
 
-    <section id="bootScreen">
+    <section id="bootScreen" onclick="startMusic()">
         <div class="boot-container">
             <div class="boot-logo">YAZHINI.EXE</div>
             <div id="bootText"></div>
@@ -1105,8 +1105,8 @@ Take care, senior. 🎓
      MUSIC
 ============================================================ -->
 
-<audio id="backgroundMusic" loop preload="auto">
-    <source src="The-Metro-Proposal-MassTamilan.dev.mp3.mpeg">
+<audio id="backgroundMusic" loop preload="auto" playsinline>
+    <source src="The-Metro-Proposal-MassTamilan.dev.mp3.mpeg" type="audio/mpeg">
 </audio>
 
 <script>
@@ -1132,9 +1132,14 @@ const music = document.getElementById("backgroundMusic");
 music.volume = 1.0;
 
 function startMusic() {
+
+    if (!music.paused) {
+        return;
+    }
+
     music.play().catch(() => {
-        // Browser blocked autoplay.
-        // It will retry after user interaction.
+        // iPad/Safari may require a direct user interaction.
+        // The boot screen itself is connected to this function.
     });
 }
 
